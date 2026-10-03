@@ -913,7 +913,8 @@
       surveyRatings: { kemudahan_aplikasi: 0, kemudahan_soal: 0 },
       lastBroadcastCheck: null,
       broadcastInterval: null,
-      broadcastCount: 0
+      broadcastCount: 0,
+      seenBroadcastIds: new Set()  // ← Track ID pesan yg sudah ditampilkan (anti-duplikat)
     };
 
     /* ============================================================
@@ -1403,6 +1404,17 @@
       checkBroadcast(); // cek langsung pertama kali
     }
 
+    // Helper: generate stable ID untuk pesan broadcast (anti-duplikat)
+    // Pakai kombinasi: timestamp + proctor + isi_pesan (singkat)
+    function getBroadcastId(p) {
+      const ts = String(p.timestamp || '').trim();
+      const proctor = String(p.proctor_username || '').trim();
+      const target = String(p.target_username || '').trim();
+      // Hash isi_pesan (ambil 100 char pertama untuk ID stabil)
+      const isiHash = String(p.isi_pesan || '').substring(0, 100);
+      return ts + '|' + proctor + '|' + target + '|' + isiHash;
+    }
+
     async function checkBroadcast() {
       if (!state.user || !state.siswa || state.isLocked) return;
       // Hanya polling saat di Layer 5 (exam)
@@ -1414,8 +1426,19 @@
           since: state.lastBroadcastCheck
         });
         if (!res.success || !res.pesan || !res.pesan.length) return;
+
+        // FILTER: hanya proses pesan yang BELUM pernah ditampilkan
+        const newPesan = res.pesan.filter(p => {
+          const id = getBroadcastId(p);
+          if (state.seenBroadcastIds.has(id)) return false;  // sudah pernah ditampilkan → skip
+          state.seenBroadcastIds.add(id);
+          return true;
+        });
+
+        if (newPesan.length === 0) return;  // semua pesan sudah pernah ditampilkan
+
         state.lastBroadcastCheck = new Date().toISOString();
-        res.pesan.forEach(p => {
+        newPesan.forEach(p => {
           showBroadcastPopup(p);
           addToBroadcastList(p);
           state.broadcastCount++;
@@ -1578,6 +1601,7 @@
       state.surveyRatings = { kemudahan_aplikasi: 0, kemudahan_soal: 0 };
       state.lastBroadcastCheck = null;
       state.broadcastCount = 0;
+      state.seenBroadcastIds = new Set();  // Reset daftar pesan yg sudah dilihat
       clearSession();
       // Reset form & UI
       document.getElementById('login-form').reset();
