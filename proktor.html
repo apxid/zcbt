@@ -452,6 +452,65 @@
 
         <!-- Tab: Berita Acara -->
         <div id="tab-berita" class="hidden space-y-4">
+          <!-- Form konfigurasi kop (sama seperti di admin.html) -->
+          <div class="card p-5 bg-gradient-to-br from-blue-50 to-slate-50">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-5 h-5 text-royal-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <h3 class="font-bold text-slate-900">Konfigurasi Kop Surat &amp; Penandatangan</h3>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Isi data di bawah sekali — akan tersimpan otomatis di browser. Digunakan untuk kop berita acara &amp; daftar hadir.</p>
+
+            <div class="grid lg:grid-cols-3 gap-4 mb-4">
+              <!-- Kolom 1: Identitas Sekolah -->
+              <div class="bg-white rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Identitas Sekolah</div>
+                <div class="space-y-2">
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Nama Sekolah</label><input id="kop-nama-sekolah" type="text" placeholder="SMA Negeri 1 Contoh" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">NPSN</label><input id="kop-npsn" type="text" placeholder="20100123" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Kabupaten</label><input id="kop-kabupaten" type="text" placeholder="Moga" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Provinsi</label><input id="kop-provinsi" type="text" placeholder="Jawa Tengah" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kolom 2: Detail Pelaksanaan -->
+              <div class="bg-white rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Detail Pelaksanaan</div>
+                <div class="space-y-2">
+                  <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Hari</label><input id="kop-hari" type="text" placeholder="Senin" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Tanggal</label><input id="kop-tanggal-ujian" type="text" placeholder="15 Oktober 2025" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Pukul</label><input id="kop-pukul" type="text" placeholder="08:00 - 09:30" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Alokasi Waktu</label><input id="kop-alokasi" type="text" placeholder="90 menit" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  </div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Mode Pelaksanaan</label><input id="kop-mode" type="text" value="Online" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                </div>
+              </div>
+
+              <!-- Kolom 3: Penandatangan -->
+              <div class="bg-white rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Data Penandatangan</div>
+                <div class="space-y-2">
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Nama Kepala Sekolah</label><input id="kop-nama-kepsek" type="text" placeholder="Drs. Budi, M.Pd." class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">NIP Kepala Sekolah</label><input id="kop-nip-kepsek" type="text" placeholder="19650101 199001 1 001" class="input-field w-full px-2 py-1.5 rounded-lg text-sm font-mono" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Nama Proktor</label><input id="kop-nama-proktor" type="text" placeholder="Budi Santoso, S.Pd." class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">NIP Proktor</label><input id="kop-nip-proktor" type="text" placeholder="19800101 200501 1 001" class="input-field w-full px-2 py-1.5 rounded-lg text-sm font-mono" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Nama Pengawas</label><input id="kop-nama-pengawas" type="text" placeholder="Siti Aminah, S.Pd." class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">NIP Pengawas</label><input id="kop-nip-pengawas" type="text" placeholder="19850101 200801 2 002" class="input-field w-full px-2 py-1.5 rounded-lg text-sm font-mono" /></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <button onclick="simpanKopConfig()" class="btn-neon px-5 py-2 rounded-lg text-sm">Simpan Konfigurasi</button>
+              <button onclick="resetKopConfig()" class="px-4 py-2 rounded-lg border-2 border-slate-200 text-slate-600 font-semibold text-sm">Reset ke Default</button>
+            </div>
+          </div>
+
+          <!-- Form berita acara -->
           <div class="card p-6">
             <h3 class="font-bold text-slate-900 text-lg mb-4">Berita Acara Pelaksanaan Ujian</h3>
             <div class="grid sm:grid-cols-2 gap-3 mb-4">
@@ -717,6 +776,8 @@
       });
       document.getElementById('tab-' + tab).classList.remove('hidden');
       document.querySelector(`[data-nav="${tab}"]`).classList.add('active');
+      // Auto-load kop config saat masuk tab berita
+      if (tab === 'berita') loadKopConfig();
     }
 
     /* ============================================================
@@ -983,6 +1044,90 @@
       else showToast(res.error || 'Gagal simpan', 'error');
     }
 
+    /* ============================================================
+       KOP CONFIG (persisten di localStorage — sama seperti admin)
+       ============================================================ */
+    const KOP_DEFAULTS = {
+      namaSekolah: 'SMA Negeri 1 Contoh',
+      npsn: '20100123',
+      kabupaten: 'Moga',
+      provinsi: 'Jawa Tengah',
+      hari: 'Senin',
+      tanggalUjian: '15 Oktober 2025',
+      pukul: '08:00 - 09:30',
+      alokasi: '90 menit',
+      mode: 'Online',
+      namaKepsek: 'Drs. Budi, M.Pd.',
+      nipKepsek: '19650101 199001 1 001',
+      namaProktor: 'Budi Santoso, S.Pd.',
+      nipProktor: '19800101 200501 1 001',
+      namaPengawas: 'Siti Aminah, S.Pd.',
+      nipPengawas: '19850101 200801 2 002'
+    };
+    const KOP_STORAGE_KEY = 'cbt_kop_config';
+
+    function loadKopConfig() {
+      let cfg = KOP_DEFAULTS;
+      try {
+        const saved = JSON.parse(localStorage.getItem(KOP_STORAGE_KEY) || 'null');
+        if (saved) cfg = Object.assign(KOP_DEFAULTS, saved);
+      } catch (e) {}
+      const map = {
+        'kop-nama-sekolah': cfg.namaSekolah, 'kop-npsn': cfg.npsn,
+        'kop-kabupaten': cfg.kabupaten, 'kop-provinsi': cfg.provinsi,
+        'kop-hari': cfg.hari, 'kop-tanggal-ujian': cfg.tanggalUjian,
+        'kop-pukul': cfg.pukul, 'kop-alokasi': cfg.alokasi, 'kop-mode': cfg.mode,
+        'kop-nama-kepsek': cfg.namaKepsek, 'kop-nip-kepsek': cfg.nipKepsek,
+        'kop-nama-proktor': cfg.namaProktor, 'kop-nip-proktor': cfg.nipProktor,
+        'kop-nama-pengawas': cfg.namaPengawas, 'kop-nip-pengawas': cfg.nipPengawas
+      };
+      for (const id in map) {
+        const el = document.getElementById(id);
+        if (el) el.value = map[id] || '';
+      }
+      return cfg;
+    }
+
+    function simpanKopConfig() {
+      const cfg = {
+        namaSekolah: document.getElementById('kop-nama-sekolah').value.trim(),
+        npsn: document.getElementById('kop-npsn').value.trim(),
+        kabupaten: document.getElementById('kop-kabupaten').value.trim(),
+        provinsi: document.getElementById('kop-provinsi').value.trim(),
+        hari: document.getElementById('kop-hari').value.trim(),
+        tanggalUjian: document.getElementById('kop-tanggal-ujian').value.trim(),
+        pukul: document.getElementById('kop-pukul').value.trim(),
+        alokasi: document.getElementById('kop-alokasi').value.trim(),
+        mode: document.getElementById('kop-mode').value.trim() || 'Online',
+        namaKepsek: document.getElementById('kop-nama-kepsek').value.trim(),
+        nipKepsek: document.getElementById('kop-nip-kepsek').value.trim(),
+        namaProktor: document.getElementById('kop-nama-proktor').value.trim(),
+        nipProktor: document.getElementById('kop-nip-proktor').value.trim(),
+        namaPengawas: document.getElementById('kop-nama-pengawas').value.trim(),
+        nipPengawas: document.getElementById('kop-nip-pengawas').value.trim()
+      };
+      localStorage.setItem(KOP_STORAGE_KEY, JSON.stringify(cfg));
+      showToast('Konfigurasi kop & penandatangan tersimpan!', 'success');
+    }
+
+    async function resetKopConfig() {
+      const ok = await showConfirm('Reset semua field konfigurasi kop & TTD ke nilai default?', {
+        title: 'Reset Konfigurasi?', confirmText: 'Ya, Reset', type: 'warning'
+      });
+      if (!ok) return;
+      localStorage.removeItem(KOP_STORAGE_KEY);
+      loadKopConfig();
+      showToast('Konfigurasi direset ke default.', 'info');
+    }
+
+    function getKopConfig() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(KOP_STORAGE_KEY) || 'null');
+        if (saved) return Object.assign(KOP_DEFAULTS, saved);
+      } catch (e) {}
+      return KOP_DEFAULTS;
+    }
+
     function cetakBeritaAcara() {
       const nama = state.user?.nama || '';
       const ruangan = state.user?.ruangan || '';
@@ -993,47 +1138,122 @@
       const hadir = document.getElementById('ba-hadir').value;
       const tidakhadir = document.getElementById('ba-tidakhadir').value;
       const catatan = document.getElementById('ba-catatan').value;
+      const kop = getKopConfig();
 
       const html = `
         <html><head><title>Berita Acara - ${ruangan}</title>
         <style>
-          body { font-family: 'Times New Roman', serif; padding: 40px; color: #000; line-height: 1.6; }
-          h1 { text-align: center; text-decoration: underline; margin-bottom: 8px; }
-          h2 { text-align: center; font-weight: normal; margin-top: 0; }
-          .meta { margin: 30px 0; }
+          @page { margin: 1.5cm; }
+          body { font-family: 'Times New Roman', serif; color: #000; line-height: 1.5; padding: 10px; }
+          .kop-atas { display: flex; align-items: center; gap: 18px; border-bottom: 3px double #000; padding-bottom: 12px; margin-bottom: 8px; }
+          .kop-logo { width: 80px; height: 80px; flex-shrink: 0; }
+          .kop-teks { flex: 1; text-align: center; }
+          .kop-teks h1 { font-size: 16px; font-weight: bold; text-transform: uppercase; margin: 0; letter-spacing: 0.5px; }
+          .kop-teks h2 { font-size: 20px; font-weight: bold; text-transform: uppercase; margin: 2px 0; letter-spacing: 0.5px; }
+          .kop-teks .alamat { font-size: 11px; margin-top: 2px; }
+          .kop-teks .npsn-line { font-size: 11px; margin-top: 1px; }
+          .judul-berkas { text-align: center; margin: 18px 0 10px; }
+          .judul-berkas h3 { font-size: 14px; font-weight: bold; text-transform: uppercase; text-decoration: underline; margin: 0; letter-spacing: 0.5px; }
+          .meta { margin: 15px 0; text-align: justify; }
           .meta p { margin: 4px 0; }
-          .catatan { margin-top: 30px; }
-          .ttd { margin-top: 60px; display: flex; justify-content: space-between; }
-          .ttd div { text-align: center; }
-          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-          td, th { border: 1px solid #000; padding: 6px; }
+          table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+          th, td { border: 1px solid #000; padding: 6px 8px; font-size: 12px; text-align: left; }
+          th { background: #e2e8f0; font-weight: bold; text-align: center; }
+          .catatan { margin-top: 20px; }
+          .catatan-box { border: 1px solid #000; padding: 10px; min-height: 60px; font-size: 12px; line-height: 1.6; }
+          .ttd-section { margin-top: 50px; }
+          .ttd-row { display: flex; justify-content: space-between; }
+          .ttd-box { width: 32%; text-align: center; font-size: 12px; }
+          .ttd-box .jabatan { margin-bottom: 60px; }
+          .ttd-box .nama { font-weight: bold; text-decoration: underline; }
+          .ttd-box .nip { margin-top: 2px; }
+          .ttd-kepsek-center { width: 33%; margin: 30px auto 0; text-align: center; font-size: 12px; }
+          .ttd-kepsek-center .jabatan { margin-bottom: 60px; }
+          .ttd-kepsek-center .nama { font-weight: bold; text-decoration: underline; }
+          .ttd-kepsek-center .nip { margin-top: 2px; }
+          .footer-cbt { text-align: center; font-size: 9px; color: #64748b; margin-top: 20px; border-top: 1px solid #cbd5e1; padding-top: 6px; }
         </style></head><body>
-          <h1>BERITA ACARA PELAKSANAAN UJIAN</h1>
-          <h2>CBT Integrated System</h2>
+
+          <!-- KOP ATAS -->
+          <div class="kop-atas">
+            <img src="${CONFIG.LOGO}" class="kop-logo" alt="Logo" />
+            <div class="kop-teks">
+              <h1>Pemerintah Kabupaten ${kop.kabupaten}</h1>
+              <h1>Dinas Pendidikan</h1>
+              <h2>${kop.namaSekolah}</h2>
+              <div class="alamat">Alamat: Jl. Pendidikan No. 1, Kec. ${kop.kabupaten}, Kab. ${kop.kabupaten}, Prov. ${kop.provinsi}</div>
+              <div class="npsn-line">NPSN: ${kop.npsn} • Telp. (0281) 123456 • Email: ${kop.namaSekolah.toLowerCase().replace(/\s/g,'')}@sch.id</div>
+            </div>
+          </div>
+
+          <!-- JUDUL -->
+          <div class="judul-berkas">
+            <h3>BERITA ACARA PELAKSANAAN UJIAN</h3>
+            <div style="font-size: 11px; margin-top: 2px;">Mode Pelaksanaan: ${kop.mode}</div>
+          </div>
+
+          <!-- ISI BERITA ACARA -->
           <div class="meta">
-            <p>Pada hari ini ${tanggal}, pukul ${waktu} WIB, telah dilaksanakan ujian:</p>
-            <p>Mata Pelajaran: <strong>${mapel}</strong></p>
-            <p>Kelas: <strong>${kelas}</strong></p>
-            <p>Ruangan: <strong>${ruangan}</strong></p>
-            <p>Pengawas: <strong>${nama}</strong></p>
+            <p>Pada hari ini <strong>${tanggal || kop.hari + ', ' + kop.tanggalUjian}</strong>, pukul <strong>${waktu || kop.pukul}</strong> WIB, telah dilaksanakan ujian dengan rincian sebagai berikut:</p>
+            <p>&nbsp;&nbsp;&nbsp;Nama Sekolah : <strong>${kop.namaSekolah}</strong></p>
+            <p>&nbsp;&nbsp;&nbsp;NPSN : <strong>${kop.npsn}</strong></p>
+            <p>&nbsp;&nbsp;&nbsp;Mata Pelajaran : <strong>${mapel || '-'}</strong></p>
+            <p>&nbsp;&nbsp;&nbsp;Kelas : <strong>${kelas || '-'}</strong></p>
+            <p>&nbsp;&nbsp;&nbsp;Ruangan : <strong>${ruangan || '-'}</strong></p>
+            <p>&nbsp;&nbsp;&nbsp;Mode Pelaksanaan : <strong>${kop.mode}</strong></p>
+            <p>&nbsp;&nbsp;&nbsp;Pengawas : <strong>${nama || kop.namaProktor}</strong></p>
           </div>
+
+          <!-- TABEL HADIR -->
           <table>
-            <tr><th>Jumlah Peserta Hadir</th><th>Jumlah Tidak Hadir</th></tr>
-            <tr><td style="text-align:center">${hadir || '-'}</td><td style="text-align:center">${tidakhadir || '-'}</td></tr>
+            <thead>
+              <tr>
+                <th>Jumlah Peserta Hadir</th>
+                <th>Jumlah Tidak Hadir</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="text-align:center; font-size: 14px; font-weight: bold;">${hadir || '-'}</td>
+                <td style="text-align:center; font-size: 14px; font-weight: bold;">${tidakhadir || '-'}</td>
+              </tr>
+            </tbody>
           </table>
+
+          <!-- CATATAN PENGAWAS -->
           <div class="catatan">
-            <strong>Catatan Pengawas:</strong><br/>
-            <p style="white-space: pre-wrap">${catatan || '-'}</p>
+            <strong>Catatan Pengawas:</strong>
+            <div class="catatan-box">${catatan || '-'}</div>
           </div>
-          <div class="ttd">
-            <div>Mengetahui,<br/>Kepala Sekolah<br/><br/><br/><br/>(...........................)</div>
-            <div>Pengawas Ruangan,<br/><br/><br/><br/>${nama}<br/>(...........................)</div>
+
+          <!-- TANDA TANGAN -->
+          <div class="ttd-section">
+            <div class="ttd-row">
+              <div class="ttd-box">
+                <div class="jabatan">Proktor,<br />&nbsp;</div>
+                <div class="nama">${kop.namaProktor || nama || '(...........................)'}</div>
+                <div class="nip">NIP. ${kop.nipProktor || '...........................'}</div>
+              </div>
+              <div class="ttd-box">
+                <div class="jabatan">Pengawas,<br />&nbsp;</div>
+                <div class="nama">${kop.namaPengawas || '(...........................)'}</div>
+                <div class="nip">NIP. ${kop.nipPengawas || '...........................'}</div>
+              </div>
+            </div>
+            <div class="ttd-kepsek-center">
+              <div class="jabatan">Mengetahui,<br />Kepala Sekolah</div>
+              <div class="nama">${kop.namaKepsek || '(...........................)'}</div>
+              <div class="nip">NIP. ${kop.nipKepsek || '...........................'}</div>
+            </div>
           </div>
+
+          <div class="footer-cbt">CBT Integrated System • v1.0 | Developed by MB • yanuar.b@gmail.com</div>
         </body></html>`;
+
       const w = window.open('', '_blank');
       w.document.write(html);
       w.document.close();
-      setTimeout(() => w.print(), 500);
+      setTimeout(() => w.print(), 600);
     }
 
     /* ============================================================
