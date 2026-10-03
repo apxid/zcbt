@@ -207,7 +207,11 @@
           </button>
           <button onclick="navTo('hadir')" data-nav="hadir" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-            Daftar Hadir
+            Daftar Hadir Peserta
+          </button>
+          <button onclick="navTo('panitia')" data-nav="panitia" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Daftar Hadir Panitia
           </button>
         </nav>
       </aside>
@@ -388,14 +392,78 @@
         <!-- Tab: Daftar Hadir -->
         <div id="tab-hadir" class="hidden space-y-4">
           <div><h2 class="text-2xl font-extrabold text-slate-900">Daftar Hadir Peserta</h2><p class="text-slate-500 text-sm">Cetak daftar hadir resmi per ruangan/sesi.</p></div>
+
+          <!-- Form konfigurasi kop & TTD -->
+          <div class="card p-5 bg-gradient-to-br from-blue-50 to-slate-50">
+            <div class="flex items-center gap-2 mb-3">
+              <svg class="w-5 h-5 text-royal-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <h3 class="font-bold text-slate-900">Konfigurasi Kop Surat &amp; Penandatangan</h3>
+            </div>
+            <p class="text-xs text-slate-500 mb-4">Isi data di bawah sekali — akan tersimpan otomatis di browser. Klik "Simpan" untuk menerapkan.</p>
+
+            <div class="grid lg:grid-cols-3 gap-4 mb-4">
+              <!-- Kolom kiri: Identitas Sekolah -->
+              <div class="bg-white rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Identitas Sekolah</div>
+                <div class="space-y-2">
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Nama Sekolah</label><input id="kop-nama-sekolah" type="text" placeholder="SMA Negeri 1 Contoh" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">NPSN</label><input id="kop-npsn" type="text" placeholder="20100123" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Kabupaten</label><input id="kop-kabupaten" type="text" placeholder="Moga" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Provinsi</label><input id="kop-provinsi" type="text" placeholder="Jawa Tengah" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kolom tengah: Detail Pelaksanaan -->
+              <div class="bg-white rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Detail Pelaksanaan</div>
+                <div class="space-y-2">
+                  <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Hari</label><input id="kop-hari" type="text" placeholder="Senin" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Tanggal</label><input id="kop-tanggal-ujian" type="text" placeholder="15 Oktober 2025" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Pukul</label><input id="kop-pukul" type="text" placeholder="08:00 - 09:30" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                    <div><label class="block text-xs text-slate-600 mb-0.5">Alokasi Waktu</label><input id="kop-alokasi" type="text" placeholder="90 menit" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  </div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Mode Pelaksanaan</label><input id="kop-mode" type="text" value="Online" class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                </div>
+              </div>
+
+              <!-- Kolom kanan: Penandatangan -->
+              <div class="bg-white rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Data Penandatangan</div>
+                <div class="space-y-2">
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Nama Kepala Sekolah</label><input id="kop-nama-kepsek" type="text" placeholder="Drs. Budi, M.Pd." class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">NIP Kepala Sekolah</label><input id="kop-nip-kepsek" type="text" placeholder="19650101 199001 1 001" class="input-field w-full px-2 py-1.5 rounded-lg text-sm font-mono" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Nama Proktor</label><input id="kop-nama-proktor" type="text" placeholder="Budi Santoso, S.Pd." class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">NIP Proktor</label><input id="kop-nip-proktor" type="text" placeholder="19800101 200501 1 001" class="input-field w-full px-2 py-1.5 rounded-lg text-sm font-mono" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">Nama Pengawas</label><input id="kop-nama-pengawas" type="text" placeholder="Siti Aminah, S.Pd." class="input-field w-full px-2 py-1.5 rounded-lg text-sm" /></div>
+                  <div><label class="block text-xs text-slate-600 mb-0.5">NIP Pengawas</label><input id="kop-nip-pengawas" type="text" placeholder="19850101 200801 2 002" class="input-field w-full px-2 py-1.5 rounded-lg text-sm font-mono" /></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <button onclick="simpanKopConfig()" class="btn-neon px-5 py-2 rounded-lg text-sm">Simpan Konfigurasi</button>
+              <button onclick="resetKopConfig()" class="px-4 py-2 rounded-lg border-2 border-slate-200 text-slate-600 font-semibold text-sm">Reset ke Default</button>
+            </div>
+          </div>
+
+          <!-- Filter & tabel -->
           <div class="card p-5">
-            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+            <div class="grid sm:grid-cols-4 gap-3 mb-4">
               <select id="hadir-ruangan" class="input-field px-3 py-2.5 rounded-xl text-sm">
                 <option value="">Semua Ruangan</option>
               </select>
               <select id="hadir-sesi" class="input-field px-3 py-2.5 rounded-xl text-sm">
                 <option value="">Semua Sesi</option>
               </select>
+              <label class="flex items-center gap-2 px-3 py-2.5 rounded-xl border-2 border-slate-200 cursor-pointer hover:bg-amber-50 transition">
+                <input id="hadir-susulan" type="checkbox" class="w-4 h-4 accent-amber-500" onchange="toggleSusulan(this, 'hadir')" />
+                <span class="text-sm font-semibold text-slate-700">Daftar Hadir Susulan</span>
+              </label>
               <button onclick="cetakDaftarHadir()" class="btn-neon py-2.5 rounded-xl text-sm">Cetak Daftar Hadir</button>
             </div>
             <div class="overflow-x-auto">
@@ -411,6 +479,64 @@
                 </tr></thead>
                 <tbody id="hadir-tbody"></tbody>
               </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             TAB: DAFTAR HADIR PANITIA (Teknisi, Proktor, Pengawas)
+             ============================================================ -->
+        <div id="tab-panitia" class="hidden space-y-4">
+          <div><h2 class="text-2xl font-extrabold text-slate-900">Daftar Hadir Panitia</h2><p class="text-slate-500 text-sm">Daftar hadir Teknisi, Proktor &amp; Pengawas ujian.</p></div>
+
+          <!-- Form input daftar panitia -->
+          <div class="card p-5">
+            <h3 class="font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <svg class="w-5 h-5 text-royal-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              Input Daftar Panitia
+            </h3>
+            <p class="text-xs text-slate-500 mb-4">Masukkan nama-nama panitia. Teknisi bisa diinput bebas (satu nama per baris). Proktor &amp; Pengawas otomatis dimuat dari database (atau input manual di bawah).</p>
+
+            <div class="grid lg:grid-cols-3 gap-4">
+              <!-- Kolom 1: Teknisi -->
+              <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Daftar Teknisi</div>
+                <p class="text-xs text-slate-500 mb-2">Satu nama per baris. Teknisi bisa diisi bebas (bukan dari database).</p>
+                <textarea id="panitia-teknisi" rows="8" placeholder="Ahmad Fadli&#10;Budi Santoso&#10;Citra Dewi" class="input-field w-full px-3 py-2 rounded-lg text-sm font-mono resize-none"></textarea>
+                <div class="text-xs text-slate-400 mt-1"><span id="teknisi-count">0</span> nama terdeteksi</div>
+              </div>
+
+              <!-- Kolom 2: Proktor -->
+              <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Daftar Proktor</div>
+                <p class="text-xs text-slate-500 mb-2">Auto-load dari database. Anda bisa edit manual jika perlu (satu nama per baris).</p>
+                <textarea id="panitia-proktor" rows="8" placeholder="(auto-load dari database)" class="input-field w-full px-3 py-2 rounded-lg text-sm font-mono resize-none"></textarea>
+                <button onclick="reloadProktorList()" class="text-xs text-royal-blue hover:underline mt-1">↻ Reload dari Database</button>
+              </div>
+
+              <!-- Kolom 3: Pengawas -->
+              <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                <div class="text-xs font-bold text-royal-blue uppercase tracking-wide mb-2">Daftar Pengawas</div>
+                <p class="text-xs text-slate-500 mb-2">Input nama pengawas (satu per baris). Bisa proktor yang ditugaskan sebagai pengawas tambahan.</p>
+                <textarea id="panitia-pengawas" rows="8" placeholder="Siti Aminah, S.Pd.&#10;Ahmad Hidayat, S.Pd." class="input-field w-full px-3 py-2 rounded-lg text-sm font-mono resize-none"></textarea>
+                <div class="text-xs text-slate-400 mt-1"><span id="pengawas-count">0</span> nama terdeteksi</div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between flex-wrap gap-3">
+              <div class="flex items-center gap-3 flex-wrap">
+                <label class="flex items-center gap-2 px-3 py-2 rounded-xl border-2 border-slate-200 cursor-pointer hover:bg-amber-50 transition">
+                  <input id="panitia-susulan" type="checkbox" class="w-4 h-4 accent-amber-500" onchange="toggleSusulan(this, 'panitia')" />
+                  <span class="text-sm font-semibold text-slate-700">Daftar Hadir Susulan</span>
+                </label>
+                <span class="text-xs text-slate-500">
+                  <strong>Catatan:</strong> Daftar panitia ini akan digabung dengan konfigurasi kop &amp; TTD (lihat di tab Daftar Hadir Peserta).
+                </span>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="simpanPanitiaList()" class="btn-royal px-4 py-2 rounded-lg text-sm">Simpan Daftar</button>
+                <button onclick="cetakDaftarHadirPanitia()" class="btn-neon px-5 py-2 rounded-lg text-sm">Cetak Daftar Hadir</button>
+              </div>
             </div>
           </div>
         </div>
@@ -457,7 +583,7 @@
           <div><label class="block text-xs font-semibold text-slate-700 mb-1">Ruangan</label><input id="p-ruangan" type="text" placeholder="Ruang A-101" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
           <div><label class="block text-xs font-semibold text-slate-700 mb-1">Sesi</label><select id="p-sesi" required class="input-field w-full px-3 py-2 rounded-lg text-sm"><option value="Sesi 1">Sesi 1</option><option value="Sesi 2">Sesi 2</option><option value="Sesi 3">Sesi 3</option></select></div>
         </div>
-        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Token Aktif Sampai</label><input id="p-expiry" type="text" placeholder="2025-12-31 23:59:59" value="2025-12-31 23:59:59" class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Token Aktif Sampai</label><input id="p-expiry" type="text" placeholder="2027-12-31 23:59:59" value="2027-12-31 23:59:59" class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
         <div class="flex gap-2 pt-2">
           <button type="button" onclick="closeProctorModal()" class="flex-1 py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold">Batal</button>
           <button type="submit" class="flex-1 btn-neon py-2.5 rounded-xl">Simpan</button>
@@ -510,7 +636,7 @@
        CONFIG
        ============================================================ */
     const CONFIG = {
-      WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbzsb5wJ_qYfIisMMc_tNcDBpcD-cPyoO6kwvBQh9m2rZPqj1oNSoIIqu51xBpZVtC0/exec',
+      WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbwqKgTSOrKJmEwc07QXtyQozg2GLliovv6KwWt4TroA-ejpTJY76bLEsgDTT9SVsQLUBA/exec',
       LOGO: 'https://yanuar-moga.github.io/cbt/assets/logo.png',
       APP_NAME: 'CBT Integrated System',
       VERSION: 'v1.0'
@@ -535,9 +661,9 @@
        DEMO DATA
        ============================================================ */
     const DEMO_PROCTORS = [
-      { username: 'proctor01', password: 'proc123', nama_lengkap: 'Budi Santoso, S.Pd.', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_proctor: 'PRC-7F3K-2025', token_aktif_sampai: '2025-12-31 23:59:59', status: 'aktif' },
-      { username: 'proctor02', password: 'proc456', nama_lengkap: 'Siti Aminah, S.Pd.', ruangan: 'Ruang B-201', sesi: 'Sesi 2', token_proctor: 'PRC-9K2L-2025', token_aktif_sampai: '2025-12-31 23:59:59', status: 'aktif' },
-      { username: 'proctor03', password: 'proc789', nama_lengkap: 'Ahmad Hidayat, S.Pd.', ruangan: 'Ruang C-301', sesi: 'Sesi 3', token_proctor: 'PRC-4M8N-2025', token_aktif_sampai: '2025-12-31 23:59:59', status: 'aktif' }
+      { username: 'proctor01', password: 'proc123', nama_lengkap: 'Budi Santoso, S.Pd.', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_proctor: 'PRC-7F3K-2025', token_aktif_sampai: '2027-12-31 23:59:59', status: 'aktif' },
+      { username: 'proctor02', password: 'proc456', nama_lengkap: 'Siti Aminah, S.Pd.', ruangan: 'Ruang B-201', sesi: 'Sesi 2', token_proctor: 'PRC-9K2L-2025', token_aktif_sampai: '2027-12-31 23:59:59', status: 'aktif' },
+      { username: 'proctor03', password: 'proc789', nama_lengkap: 'Ahmad Hidayat, S.Pd.', ruangan: 'Ruang C-301', sesi: 'Sesi 3', token_proctor: 'PRC-4M8N-2025', token_aktif_sampai: '2027-12-31 23:59:59', status: 'aktif' }
     ];
 
     const DEMO_SESI = [
@@ -596,7 +722,7 @@
       }
       if (action === 'crudProctor') {
         if (p.op === 'list') return { success: true, data: DEMO_PROCTORS };
-        if (p.op === 'create') { DEMO_PROCTORS.push({ username: p.username, password: p.password, nama_lengkap: p.nama_lengkap, ruangan: p.ruangan, sesi: p.sesi, token_proctor: 'PRC-' + Math.random().toString(36).substr(2,4).toUpperCase() + '-2025', token_aktif_sampai: p.token_aktif_sampai || '2025-12-31 23:59:59', status: 'aktif' }); return { success: true }; }
+        if (p.op === 'create') { DEMO_PROCTORS.push({ username: p.username, password: p.password, nama_lengkap: p.nama_lengkap, ruangan: p.ruangan, sesi: p.sesi, token_proctor: 'PRC-' + Math.random().toString(36).substr(2,4).toUpperCase() + '-2025', token_aktif_sampai: p.token_aktif_sampai || '2027-12-31 23:59:59', status: 'aktif' }); return { success: true }; }
         if (p.op === 'update') { const i = DEMO_PROCTORS.findIndex(x => x.username === p.username); if (i >= 0) Object.assign(DEMO_PROCTORS[i], { password: p.password, nama_lengkap: p.nama_lengkap, ruangan: p.ruangan, sesi: p.sesi, token_aktif_sampai: p.token_aktif_sampai, status: p.status }); return { success: true }; }
         if (p.op === 'delete') { const i = DEMO_PROCTORS.findIndex(x => x.username === p.username); if (i >= 0) DEMO_PROCTORS.splice(i, 1); return { success: true }; }
       }
@@ -635,7 +761,7 @@
     function closeAppInfo() { document.getElementById('modal-info').classList.add('hidden'); }
 
     function navTo(tab) {
-      ['dashboard', 'proctor', 'sesi', 'token', 'kartu', 'hadir'].forEach(t => {
+      ['dashboard', 'proctor', 'sesi', 'token', 'kartu', 'hadir', 'panitia'].forEach(t => {
         document.getElementById('tab-' + t).classList.add('hidden');
         document.querySelector(`[data-nav="${t}"]`).classList.remove('active');
       });
@@ -645,7 +771,8 @@
       if (tab === 'sesi') loadSesi();
       if (tab === 'token') loadTokens();
       if (tab === 'kartu') loadKartu();
-      if (tab === 'hadir') loadHadir();
+      if (tab === 'hadir') { loadHadir(); loadKopConfig(); }
+      if (tab === 'panitia') { loadKopConfig(); loadPanitiaData(); }
     }
 
     /* ============================================================
@@ -772,7 +899,7 @@
       document.getElementById('p-nama').value = p ? p.nama_lengkap : '';
       document.getElementById('p-ruangan').value = p ? p.ruangan : '';
       document.getElementById('p-sesi').value = p ? p.sesi : 'Sesi 1';
-      document.getElementById('p-expiry').value = p ? p.token_aktif_sampai : '2025-12-31 23:59:59';
+      document.getElementById('p-expiry').value = p ? p.token_aktif_sampai : '2027-12-31 23:59:59';
       document.getElementById('modal-proctor').classList.remove('hidden');
     }
     function closeProctorModal() { document.getElementById('modal-proctor').classList.add('hidden'); }
@@ -1064,47 +1191,527 @@
       `).join('');
     }
 
+    /* ============================================================
+       KOP CONFIG (persisten di localStorage)
+       ============================================================ */
+    const KOP_DEFAULTS = {
+      namaSekolah: 'SMA Negeri 1 Contoh',
+      npsn: '20100123',
+      kabupaten: 'Moga',
+      provinsi: 'Jawa Tengah',
+      hari: 'Senin',
+      tanggalUjian: '15 Oktober 2025',
+      pukul: '08:00 - 09:30',
+      alokasi: '90 menit',
+      mode: 'Online',
+      namaKepsek: 'Drs. Budi, M.Pd.',
+      nipKepsek: '19650101 199001 1 001',
+      namaProktor: 'Budi Santoso, S.Pd.',
+      nipProktor: '19800101 200501 1 001',
+      namaPengawas: 'Siti Aminah, S.Pd.',
+      nipPengawas: '19850101 200801 2 002'
+    };
+    const KOP_STORAGE_KEY = 'cbt_kop_config';
+
+    function loadKopConfig() {
+      let cfg = KOP_DEFAULTS;
+      try {
+        const saved = JSON.parse(localStorage.getItem(KOP_STORAGE_KEY) || 'null');
+        if (saved) cfg = Object.assign(KOP_DEFAULTS, saved);
+      } catch (e) {}
+      // Isi field-field form
+      const map = {
+        'kop-nama-sekolah': cfg.namaSekolah,
+        'kop-npsn': cfg.npsn,
+        'kop-kabupaten': cfg.kabupaten,
+        'kop-provinsi': cfg.provinsi,
+        'kop-hari': cfg.hari,
+        'kop-tanggal-ujian': cfg.tanggalUjian,
+        'kop-pukul': cfg.pukul,
+        'kop-alokasi': cfg.alokasi,
+        'kop-mode': cfg.mode,
+        'kop-nama-kepsek': cfg.namaKepsek,
+        'kop-nip-kepsek': cfg.nipKepsek,
+        'kop-nama-proktor': cfg.namaProktor,
+        'kop-nip-proktor': cfg.nipProktor,
+        'kop-nama-pengawas': cfg.namaPengawas,
+        'kop-nip-pengawas': cfg.nipPengawas
+      };
+      for (const id in map) {
+        const el = document.getElementById(id);
+        if (el) el.value = map[id] || '';
+      }
+      return cfg;
+    }
+
+    function simpanKopConfig() {
+      const cfg = {
+        namaSekolah: document.getElementById('kop-nama-sekolah').value.trim(),
+        npsn: document.getElementById('kop-npsn').value.trim(),
+        kabupaten: document.getElementById('kop-kabupaten').value.trim(),
+        provinsi: document.getElementById('kop-provinsi').value.trim(),
+        hari: document.getElementById('kop-hari').value.trim(),
+        tanggalUjian: document.getElementById('kop-tanggal-ujian').value.trim(),
+        pukul: document.getElementById('kop-pukul').value.trim(),
+        alokasi: document.getElementById('kop-alokasi').value.trim(),
+        mode: document.getElementById('kop-mode').value.trim() || 'Online',
+        namaKepsek: document.getElementById('kop-nama-kepsek').value.trim(),
+        nipKepsek: document.getElementById('kop-nip-kepsek').value.trim(),
+        namaProktor: document.getElementById('kop-nama-proktor').value.trim(),
+        nipProktor: document.getElementById('kop-nip-proktor').value.trim(),
+        namaPengawas: document.getElementById('kop-nama-pengawas').value.trim(),
+        nipPengawas: document.getElementById('kop-nip-pengawas').value.trim()
+      };
+      localStorage.setItem(KOP_STORAGE_KEY, JSON.stringify(cfg));
+      showToast('Konfigurasi kop & penandatangan tersimpan!', 'success');
+    }
+
+    function resetKopConfig() {
+      if (!confirm('Reset semua field konfigurasi ke nilai default?')) return;
+      localStorage.removeItem(KOP_STORAGE_KEY);
+      loadKopConfig();
+      showToast('Konfigurasi direset ke default.', 'info');
+    }
+
+    function getKopConfig() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(KOP_STORAGE_KEY) || 'null');
+        if (saved) return Object.assign(KOP_DEFAULTS, saved);
+      } catch (e) {}
+      return KOP_DEFAULTS;
+    }
+
+    /* ============================================================
+       HELPER: Toggle "Daftar Hadir Susulan"
+       ============================================================ */
+    function toggleSusulan(checkbox, prefix) {
+      const checked = checkbox.checked;
+      const btn = document.querySelector(`#${prefix}-susulan`).closest('label');
+      if (checked) {
+        btn.classList.add('bg-amber-50', 'border-amber-400');
+        showToast('Mode "Daftar Hadir Susulan" aktif. Judul akan diberi label SUSULAN.', 'info');
+      } else {
+        btn.classList.remove('bg-amber-50', 'border-amber-400');
+      }
+    }
+
+    /* ============================================================
+       CETAK DAFTAR HADIR (revisi layout 2 kolom + 3 TTD)
+       ============================================================ */
     function cetakDaftarHadir() {
       const ruangan = document.getElementById('hadir-ruangan').value;
       const sesi = document.getElementById('hadir-sesi').value;
+      const kop = getKopConfig();
+      const isSusulan = document.getElementById('hadir-susulan').checked;
+      const susulanLabel = isSusulan ? ' <span style="color:#dc2626;font-weight:bold;">(SUSULAN)</span>' : '';
+      const susulanTitle = isSusulan ? ' SUSULAN' : '';
+
       apiCall('getDaftarHadir', { ruangan, sesi }).then(res => {
-        if (!res.success) return;
+        if (!res.success) {
+          showToast('Gagal memuat data daftar hadir', 'error');
+          return;
+        }
         const rows = res.data.map((s, i) => `
           <tr>
             <td style="text-align:center">${i + 1}</td>
-            <td>${s.username}</td>
-            <td>${s.nama_lengkap}</td>
-            <td>${s.kelas}</td>
-            <td style="height:40px"></td>
-            <td style="text-align:center">${s.status_hadir}</td>
+            <td style="text-align:center">${s.username || '-'}</td>
+            <td>${s.nama_lengkap || '-'}</td>
+            <td style="text-align:center">${s.kelas || '-'}</td>
+            <td style="height:36px"></td>
+            <td style="text-align:center">${s.status_hadir || 'hadir'}</td>
           </tr>`).join('');
+
+        // Ambil kelas & ruang dari data pertama (jika ada) atau dari filter
+        const firstData = res.data[0] || {};
+        const kelasTampil = firstData.kelas || '-';
+        const ruangTampil = ruangan || firstData.ruangan || '-';
+        const sesiTampil = sesi || firstData.sesi || 'Semua Sesi';
+
         const html = `
-          <html><head><title>Daftar Hadir ${ruangan || 'Semua'} - ${sesi || 'Semua'}</title>
-          <style>
-            body{font-family:'Times New Roman';padding:40px;color:#000}
-            h1{text-align:center;text-decoration:underline;margin:0 0 5px}
-            .meta{text-align:center;margin-bottom:20px;font-size:13px}
-            table{width:100%;border-collapse:collapse;margin-top:15px}
-            th,td{border:1px solid #000;padding:6px 8px;font-size:12px;text-align:left}
-            th{background:#f1f5f9;font-weight:bold}
-            .ttd{margin-top:50px;display:flex;justify-content:space-between}
-          </style></head><body>
-            <h1>DAFTAR HADIR PESERTA UJIAN</h1>
-            <div class="meta">CBT Integrated System • ${ruangan || 'Semua Ruangan'} • ${sesi || 'Semua Sesi'}</div>
-            <table>
-              <thead><tr><th style="width:40px">No</th><th style="width:100px">Username</th><th>Nama Lengkap</th><th style="width:90px">Kelas</th><th style="width:160px">Tanda Tangan</th><th style="width:80px">Status</th></tr></thead>
-              <tbody>${rows}</tbody>
-            </table>
-            <div class="ttd">
-              <div>Mengetahui,<br/>Kepala Sekolah<br/><br/><br/><br/>(...........................)</div>
-              <div>Pengawas Ruangan,<br/><br/><br/><br/>(...........................)</div>
+        <html><head><title>Daftar Hadir${susulanTitle} - ${ruangTampil} - ${sesiTampil}</title>
+        <style>
+          @page { margin: 1.5cm; }
+          body { font-family: 'Times New Roman', serif; color: #000; line-height: 1.4; padding: 10px; }
+          /* KOP ATAS */
+          .kop-atas { display: flex; align-items: center; gap: 18px; border-bottom: 3px double #000; padding-bottom: 12px; margin-bottom: 8px; }
+          .kop-logo { width: 80px; height: 80px; flex-shrink: 0; }
+          .kop-teks { flex: 1; text-align: center; }
+          .kop-teks h1 { font-size: 18px; font-weight: bold; text-transform: uppercase; margin: 0; letter-spacing: 0.5px; }
+          .kop-teks h2 { font-size: 20px; font-weight: bold; text-transform: uppercase; margin: 2px 0; letter-spacing: 0.5px; }
+          .kop-teks .alamat { font-size: 11px; margin-top: 2px; }
+          .kop-teks .npsn-line { font-size: 11px; margin-top: 1px; }
+          /* JUDUL */
+          .judul-berkas { text-align: center; margin: 18px 0 10px; }
+          .judul-berkas h3 { font-size: 14px; font-weight: bold; text-transform: uppercase; text-decoration: underline; margin: 0; letter-spacing: 0.5px; }
+          /* INFO 2 KOLOM */
+          .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid #000; margin-bottom: 12px; font-size: 12px; }
+          .info-col { padding: 8px 12px; }
+          .info-col.left { border-right: 1px solid #000; }
+          .info-row { display: flex; margin: 2px 0; }
+          .info-row .label { width: 140px; font-weight: bold; }
+          .info-row .sep { width: 12px; }
+          .info-row .value { flex: 1; }
+          /* TABEL */
+          table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+          th, td { border: 1px solid #000; padding: 6px 8px; font-size: 12px; text-align: left; }
+          th { background: #e2e8f0; font-weight: bold; text-align: center; }
+          /* TTD */
+          .ttd-section { margin-top: 40px; }
+          .ttd-row { display: flex; justify-content: space-between; }
+          .ttd-box { width: 32%; text-align: center; font-size: 12px; }
+          .ttd-box .jabatan { margin-bottom: 60px; }
+          .ttd-box .nama { font-weight: bold; text-decoration: underline; }
+          .ttd-box .nip { margin-top: 2px; }
+          .ttd-kepsek-center { width: 33%; margin: 30px auto 0; text-align: center; font-size: 12px; }
+          .ttd-kepsek-center .jabatan { margin-bottom: 60px; }
+          .ttd-kepsek-center .nama { font-weight: bold; text-decoration: underline; }
+          .ttd-kepsek-center .nip { margin-top: 2px; }
+          .footer-cbt { text-align: center; font-size: 9px; color: #64748b; margin-top: 20px; border-top: 1px solid #cbd5e1; padding-top: 6px; }
+        </style></head><body>
+
+          <!-- KOP ATAS -->
+          <div class="kop-atas">
+            <img src="${CONFIG.LOGO}" class="kop-logo" alt="Logo" />
+            <div class="kop-teks">
+              <h1>Pemerintah Kabupaten ${kop.kabupaten}</h1>
+              <h1>Dinas Pendidikan</h1>
+              <h2>${kop.namaSekolah}</h2>
+              <div class="alamat">Alamat: Jl. Pendidikan No. 1, Kec. ${kop.kabupaten}, Kab. ${kop.kabupaten}, Prov. ${kop.provinsi}</div>
+              <div class="npsn-line">NPSN: ${kop.npsn} • Telp. (0281) 123456 • Email: ${kop.namaSekolah.toLowerCase().replace(/\s/g,'')}@sch.id</div>
             </div>
-          </body></html>`;
+          </div>
+
+          <!-- JUDUL -->
+          <div class="judul-berkas">
+            <h3>DAFTAR HADIR${susulanTitle} PESERTA UJIAN</h3>
+            <div style="font-size: 11px; margin-top: 2px;">${isSusulan ? '<span style="color:#dc2626;font-weight:bold;">Ⓢ Daftar Hadir Susulan</span> • ' : ''}Mode Pelaksanaan: ${kop.mode}</div>
+          </div>
+
+          <!-- INFO 2 KOLOM -->
+          <div class="info-grid">
+            <!-- KOLOM KIRI -->
+            <div class="info-col left">
+              <div class="info-row"><span class="label">Nama Sekolah</span><span class="sep">:</span><span class="value">${kop.namaSekolah}</span></div>
+              <div class="info-row"><span class="label">Kabupaten</span><span class="sep">:</span><span class="value">${kop.kabupaten}</span></div>
+              <div class="info-row"><span class="label">Provinsi</span><span class="sep">:</span><span class="value">${kop.provinsi}</span></div>
+              <div class="info-row"><span class="label">Sesi</span><span class="sep">:</span><span class="value">${sesiTampil}</span></div>
+              <div class="info-row"><span class="label">Mode Pelaksanaan</span><span class="sep">:</span><span class="value">${kop.mode}</span></div>
+              <div class="info-row"><span class="label">Kelas</span><span class="sep">:</span><span class="value">${kelasTampil}</span></div>
+            </div>
+            <!-- KOLOM KANAN -->
+            <div class="info-col">
+              <div class="info-row"><span class="label">NPSN</span><span class="sep">:</span><span class="value">${kop.npsn}</span></div>
+              <div class="info-row"><span class="label">Ruang</span><span class="sep">:</span><span class="value">${ruangTampil}</span></div>
+              <div class="info-row"><span class="label">Alokasi Waktu</span><span class="sep">:</span><span class="value">${kop.alokasi}</span></div>
+              <div class="info-row"><span class="label">Pukul</span><span class="sep">:</span><span class="value">${kop.pukul}</span></div>
+              <div class="info-row"><span class="label">Hari</span><span class="sep">:</span><span class="value">${kop.hari}</span></div>
+              <div class="info-row"><span class="label">Tanggal</span><span class="sep">:</span><span class="value">${kop.tanggalUjian}</span></div>
+            </div>
+          </div>
+
+          <!-- TABEL DAFTAR HADIR -->
+          <table>
+            <thead>
+              <tr>
+                <th style="width:35px">No</th>
+                <th style="width:90px">Username</th>
+                <th>Nama Lengkap</th>
+                <th style="width:70px">Kelas</th>
+                <th style="width:180px">Tanda Tangan</th>
+                <th style="width:80px">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows || '<tr><td colspan="6" style="text-align:center;color:#64748b;padding:20px">Tidak ada data peserta untuk filter ini</td></tr>'}
+            </tbody>
+          </table>
+
+          <!-- TANDA TANGAN -->
+          <div class="ttd-section">
+            <div class="ttd-row">
+              <div class="ttd-box">
+                <div class="jabatan">Proktor,<br />&nbsp;</div>
+                <div class="nama">${kop.namaProktor || '(...........................)'}</div>
+                <div class="nip">NIP. ${kop.nipProktor || '...........................'}</div>
+              </div>
+              <div class="ttd-box">
+                <div class="jabatan">Pengawas,<br />&nbsp;</div>
+                <div class="nama">${kop.namaPengawas || '(...........................)'}</div>
+                <div class="nip">NIP. ${kop.nipPengawas || '...........................'}</div>
+              </div>
+            </div>
+            <!-- TTD Kepala Sekolah di tengah bawah -->
+            <div class="ttd-kepsek-center">
+              <div class="jabatan">Mengetahui,<br />Kepala Sekolah</div>
+              <div class="nama">${kop.namaKepsek || '(...........................)'}</div>
+              <div class="nip">NIP. ${kop.nipKepsek || '...........................'}</div>
+            </div>
+          </div>
+
+          <div class="footer-cbt">CBT Integrated System • v1.0 | Developed by MB • yanuar.b@gmail.com</div>
+        </body></html>`;
+
         const w = window.open('', '_blank');
         w.document.write(html);
         w.document.close();
-        setTimeout(() => w.print(), 500);
+        setTimeout(() => w.print(), 600);
       });
+    }
+
+    /* ============================================================
+       DAFTAR HADIR PANITIA (Teknisi, Proktor, Pengawas)
+       ============================================================ */
+    const PANITIA_STORAGE_KEY = 'cbt_panitia_list';
+
+    function loadPanitiaData() {
+      // Load saved list dari localStorage
+      let saved = { teknisi: '', proktor: '', pengawas: '' };
+      try {
+        const s = JSON.parse(localStorage.getItem(PANITIA_STORAGE_KEY) || 'null');
+        if (s) saved = Object.assign(saved, s);
+      } catch (e) {}
+      document.getElementById('panitia-teknisi').value = saved.teknisi || '';
+      document.getElementById('panitia-pengawas').value = saved.pengawas || '';
+      // Auto-load proktor dari database
+      apiCall('crudProctor', { op: 'list' }).then(res => {
+        if (res.success && res.data) {
+          const proktorNames = res.data.map(p => p.nama_lengkap).filter(n => n).join('\n');
+          // Jika saved.proktor kosong, isi dengan auto-load
+          if (!saved.proktor || saved.proktor.trim() === '') {
+            document.getElementById('panitia-proktor').value = proktorNames;
+          } else {
+            document.getElementById('panitia-proktor').value = saved.proktor;
+          }
+        } else {
+          // Mode demo: pakai DEMO_PROCTORS
+          const proktorNames = (typeof DEMO_PROCTORS !== 'undefined' ? DEMO_PROCTORS : []).map(p => p.nama_lengkap).filter(n => n).join('\n');
+          if (!saved.proktor || saved.proktor.trim() === '') {
+            document.getElementById('panitia-proktor').value = proktorNames;
+          } else {
+            document.getElementById('panitia-proktor').value = saved.proktor;
+          }
+        }
+        updatePanitiaCount();
+      });
+    }
+
+    function reloadProktorList() {
+      apiCall('crudProctor', { op: 'list' }).then(res => {
+        if (res.success && res.data) {
+          const proktorNames = res.data.map(p => p.nama_lengkap).filter(n => n).join('\n');
+          document.getElementById('panitia-proktor').value = proktorNames;
+          showToast('Daftar proktor dimuat ulang dari database.', 'success');
+        } else {
+          const proktorNames = (typeof DEMO_PROCTORS !== 'undefined' ? DEMO_PROCTORS : []).map(p => p.nama_lengkap).filter(n => n).join('\n');
+          document.getElementById('panitia-proktor').value = proktorNames;
+          showToast('Daftar proktor dimuat (mode demo).', 'info');
+        }
+        updatePanitiaCount();
+      });
+    }
+
+    function simpanPanitiaList() {
+      const data = {
+        teknisi: document.getElementById('panitia-teknisi').value,
+        proktor: document.getElementById('panitia-proktor').value,
+        pengawas: document.getElementById('panitia-pengawas').value
+      };
+      localStorage.setItem(PANITIA_STORAGE_KEY, JSON.stringify(data));
+      showToast('Daftar panitia tersimpan!', 'success');
+    }
+
+    function parseNamaList(text) {
+      if (!text) return [];
+      return text.split('\n').map(s => s.trim()).filter(s => s.length > 0);
+    }
+
+    function updatePanitiaCount() {
+      const t = parseNamaList(document.getElementById('panitia-teknisi').value);
+      const p = parseNamaList(document.getElementById('panitia-pengawas').value);
+      document.getElementById('teknisi-count').textContent = t.length;
+      document.getElementById('pengawas-count').textContent = p.length;
+    }
+
+    // Listener untuk update counter saat user mengetik
+    document.addEventListener('DOMContentLoaded', () => {
+      const tEl = document.getElementById('panitia-teknisi');
+      const pEl = document.getElementById('panitia-pengawas');
+      if (tEl) tEl.addEventListener('input', updatePanitiaCount);
+      if (pEl) pEl.addEventListener('input', updatePanitiaCount);
+    });
+
+    function cetakDaftarHadirPanitia() {
+      const kop = getKopConfig();
+      const teknisiList = parseNamaList(document.getElementById('panitia-teknisi').value);
+      const proktorList = parseNamaList(document.getElementById('panitia-proktor').value);
+      const pengawasList = parseNamaList(document.getElementById('panitia-pengawas').value);
+      const isSusulan = document.getElementById('panitia-susulan').checked;
+      const susulanTitle = isSusulan ? ' SUSULAN' : '';
+
+      if (teknisiList.length === 0 && proktorList.length === 0 && pengawasList.length === 0) {
+        showToast('Daftar panitia kosong. Silakan isi minimal satu nama.', 'error');
+        return;
+      }
+
+      // Build tabel rows
+      let nomor = 1;
+      let rowsHtml = '';
+
+      // Section Teknisi
+      if (teknisiList.length > 0) {
+        rowsHtml += `<tr><td colspan="5" style="background:#dbeafe;font-weight:bold;text-align:left;padding:6px 8px;">A. TEKNISI</td></tr>`;
+        teknisiList.forEach(nama => {
+          rowsHtml += `<tr>
+            <td style="text-align:center">${nomor++}</td>
+            <td>${nama}</td>
+            <td style="text-align:center">Teknisi</td>
+            <td style="height:36px"></td>
+            <td style="text-align:center">Hadir</td>
+          </tr>`;
+        });
+      }
+
+      // Section Proktor
+      if (proktorList.length > 0) {
+        rowsHtml += `<tr><td colspan="5" style="background:#dcfce7;font-weight:bold;text-align:left;padding:6px 8px;">B. PROKTOR</td></tr>`;
+        proktorList.forEach(nama => {
+          rowsHtml += `<tr>
+            <td style="text-align:center">${nomor++}</td>
+            <td>${nama}</td>
+            <td style="text-align:center">Proktor</td>
+            <td style="height:36px"></td>
+            <td style="text-align:center">Hadir</td>
+          </tr>`;
+        });
+      }
+
+      // Section Pengawas
+      if (pengawasList.length > 0) {
+        rowsHtml += `<tr><td colspan="5" style="background:#fef3c7;font-weight:bold;text-align:left;padding:6px 8px;">C. PENGAWAS</td></tr>`;
+        pengawasList.forEach(nama => {
+          rowsHtml += `<tr>
+            <td style="text-align:center">${nomor++}</td>
+            <td>${nama}</td>
+            <td style="text-align:center">Pengawas</td>
+            <td style="height:36px"></td>
+            <td style="text-align:center">Hadir</td>
+          </tr>`;
+        });
+      }
+
+      if (nomor === 1) {
+        rowsHtml = '<tr><td colspan="5" style="text-align:center;color:#64748b;padding:20px">Tidak ada data panitia</td></tr>';
+      }
+
+      const totalPanitia = (teknisiList.length + proktorList.length + pengawasList.length);
+      const ruangTampil = 'Semua Ruangan';
+      const sesiTampil = 'Semua Sesi';
+
+      const html = `
+      <html><head><title>Daftar Hadir Panitia${susulanTitle}</title>
+      <style>
+        @page { margin: 1.5cm; }
+        body { font-family: 'Times New Roman', serif; color: #000; line-height: 1.4; padding: 10px; }
+        .kop-atas { display: flex; align-items: center; gap: 18px; border-bottom: 3px double #000; padding-bottom: 12px; margin-bottom: 8px; }
+        .kop-logo { width: 80px; height: 80px; flex-shrink: 0; }
+        .kop-teks { flex: 1; text-align: center; }
+        .kop-teks h1 { font-size: 18px; font-weight: bold; text-transform: uppercase; margin: 0; letter-spacing: 0.5px; }
+        .kop-teks h2 { font-size: 20px; font-weight: bold; text-transform: uppercase; margin: 2px 0; letter-spacing: 0.5px; }
+        .kop-teks .alamat { font-size: 11px; margin-top: 2px; }
+        .kop-teks .npsn-line { font-size: 11px; margin-top: 1px; }
+        .judul-berkas { text-align: center; margin: 18px 0 10px; }
+        .judul-berkas h3 { font-size: 14px; font-weight: bold; text-transform: uppercase; text-decoration: underline; margin: 0; letter-spacing: 0.5px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid #000; margin-bottom: 12px; font-size: 12px; }
+        .info-col { padding: 8px 12px; }
+        .info-col.left { border-right: 1px solid #000; }
+        .info-row { display: flex; margin: 2px 0; }
+        .info-row .label { width: 140px; font-weight: bold; }
+        .info-row .sep { width: 12px; }
+        .info-row .value { flex: 1; }
+        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        th, td { border: 1px solid #000; padding: 6px 8px; font-size: 12px; text-align: left; }
+        th { background: #e2e8f0; font-weight: bold; text-align: center; }
+        .ttd-section { margin-top: 40px; }
+        .ttd-row { display: flex; justify-content: space-between; }
+        .ttd-box { width: 32%; text-align: center; font-size: 12px; }
+        .ttd-box .jabatan { margin-bottom: 60px; }
+        .ttd-box .nama { font-weight: bold; text-decoration: underline; }
+        .ttd-box .nip { margin-top: 2px; }
+        .ttd-kepsek-center { width: 33%; margin: 30px auto 0; text-align: center; font-size: 12px; }
+        .ttd-kepsek-center .jabatan { margin-bottom: 60px; }
+        .ttd-kepsek-center .nama { font-weight: bold; text-decoration: underline; }
+        .ttd-kepsek-center .nip { margin-top: 2px; }
+        .footer-cbt { text-align: center; font-size: 9px; color: #64748b; margin-top: 20px; border-top: 1px solid #cbd5e1; padding-top: 6px; }
+      </style></head><body>
+
+        <!-- KOP ATAS -->
+        <div class="kop-atas">
+          <img src="${CONFIG.LOGO}" class="kop-logo" alt="Logo" />
+          <div class="kop-teks">
+            <h1>Pemerintah Kabupaten ${kop.kabupaten}</h1>
+            <h1>Dinas Pendidikan</h1>
+            <h2>${kop.namaSekolah}</h2>
+            <div class="alamat">Alamat: Jl. Pendidikan No. 1, Kec. ${kop.kabupaten}, Kab. ${kop.kabupaten}, Prov. ${kop.provinsi}</div>
+            <div class="npsn-line">NPSN: ${kop.npsn} • Telp. (0281) 123456 • Email: ${kop.namaSekolah.toLowerCase().replace(/\s/g,'')}@sch.id</div>
+          </div>
+        </div>
+
+        <!-- JUDUL -->
+        <div class="judul-berkas">
+          <h3>DAFTAR HADIR${susulanTitle} PANITIA UJIAN</h3>
+          <div style="font-size: 11px; margin-top: 2px;">${isSusulan ? '<span style="color:#dc2626;font-weight:bold;">Ⓢ Daftar Hadir Susulan</span> • ' : ''}Teknisi, Proktor &amp; Pengawas • Mode: ${kop.mode} • Total: ${totalPanitia} orang</div>
+        </div>
+
+        <!-- INFO 2 KOLOM -->
+        <div class="info-grid">
+          <div class="info-col left">
+            <div class="info-row"><span class="label">Nama Sekolah</span><span class="sep">:</span><span class="value">${kop.namaSekolah}</span></div>
+            <div class="info-row"><span class="label">Kabupaten</span><span class="sep">:</span><span class="value">${kop.kabupaten}</span></div>
+            <div class="info-row"><span class="label">Provinsi</span><span class="sep">:</span><span class="value">${kop.provinsi}</span></div>
+            <div class="info-row"><span class="label">Sesi</span><span class="sep">:</span><span class="value">${sesiTampil}</span></div>
+            <div class="info-row"><span class="label">Mode Pelaksanaan</span><span class="sep">:</span><span class="value">${kop.mode}</span></div>
+            <div class="info-row"><span class="label">Total Panitia</span><span class="sep">:</span><span class="value">${totalPanitia} orang</span></div>
+          </div>
+          <div class="info-col">
+            <div class="info-row"><span class="label">NPSN</span><span class="sep">:</span><span class="value">${kop.npsn}</span></div>
+            <div class="info-row"><span class="label">Ruang</span><span class="sep">:</span><span class="value">${ruangTampil}</span></div>
+            <div class="info-row"><span class="label">Alokasi Waktu</span><span class="sep">:</span><span class="value">${kop.alokasi}</span></div>
+            <div class="info-row"><span class="label">Pukul</span><span class="sep">:</span><span class="value">${kop.pukul}</span></div>
+            <div class="info-row"><span class="label">Hari</span><span class="sep">:</span><span class="value">${kop.hari}</span></div>
+            <div class="info-row"><span class="label">Tanggal</span><span class="sep">:</span><span class="value">${kop.tanggalUjian}</span></div>
+          </div>
+        </div>
+
+        <!-- TABEL DAFTAR HADIR PANITIA -->
+        <table>
+          <thead>
+            <tr>
+              <th style="width:35px">No</th>
+              <th>Nama Lengkap</th>
+              <th style="width:90px">Jabatan</th>
+              <th style="width:200px">Tanda Tangan</th>
+              <th style="width:70px">Status</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+
+        <!-- TANDA TANGAN (hanya Kepala Sekolah di tengah bawah) -->
+        <div class="ttd-section">
+          <div class="ttd-kepsek-center">
+            <div class="jabatan">Mengetahui,<br />Kepala Sekolah</div>
+            <div class="nama">${kop.namaKepsek || '(...........................)'}</div>
+            <div class="nip">NIP. ${kop.nipKepsek || '...........................'}</div>
+          </div>
+        </div>
+
+        <div class="footer-cbt">CBT Integrated System • v1.0 | Developed by MB • yanuar.b@gmail.com</div>
+      </body></html>`;
+
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+      setTimeout(() => w.print(), 600);
     }
 
     /* ============================================================
