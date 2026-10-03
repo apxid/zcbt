@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="CBT Integrated System - Halaman Peserta Ujian" />
-  <title>CBT System - Peserta</title>
+  <meta name="description" content="ZCBT - Computer Based Test Platform" />
+  <title>ZCBT - Peserta Ujian</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" href="https://yanuar-moga.github.io/cbt/assets/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    /* ============================
-       DESIGN SYSTEM - CBT v1.0
-       Royal Blue / Neon Lime / White / Dark Slate
-       ============================ */
+    /* ============================================================
+       DESIGN SYSTEM — ZCBT v1.0
+       Royal Blue / Bright Neon Lime / Clean White / Dark Slate
+       ============================================================ */
     :root {
-      --royal: #1e3a8a;          /* Royal Blue */
+      --royal: #1e3a8a;
       --royal-dark: #172554;
       --royal-light: #2563eb;
-      --neon: #a3e635;            /* Bright Neon Lime */
+      --neon: #a3e635;
       --neon-dark: #84cc16;
       --neon-glow: #bef264;
-      --slate: #1e293b;           /* Dark Slate Gray */
+      --slate: #1e293b;
       --slate-light: #334155;
       --slate-muted: #64748b;
       --white: #ffffff;
@@ -40,22 +40,22 @@
     }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-    /* Animated gradient background (left panel) */
-    .royal-gradient {
+    /* Royal gradient full screen (Layer 1) */
+    .royal-bg {
       background: linear-gradient(135deg, #172554 0%, #1e3a8a 45%, #2563eb 100%);
       position: relative;
       overflow: hidden;
     }
-    .royal-gradient::before {
+    .royal-bg::before {
       content: '';
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 20% 30%, rgba(163,230,53,0.18) 0, transparent 40%),
-        radial-gradient(circle at 80% 70%, rgba(37,99,235,0.35) 0, transparent 45%);
+        radial-gradient(circle at 20% 30%, rgba(163,230,53,0.20) 0, transparent 40%),
+        radial-gradient(circle at 80% 70%, rgba(37,99,235,0.45) 0, transparent 45%);
       pointer-events: none;
     }
-    .royal-gradient::after {
+    .royal-bg::after {
       content: '';
       position: absolute;
       inset: 0;
@@ -67,7 +67,6 @@
       pointer-events: none;
     }
 
-    /* Logo 3D float */
     .logo-3d {
       filter: drop-shadow(0 25px 50px rgba(163,230,53,0.35)) drop-shadow(0 10px 20px rgba(0,0,0,0.4));
       animation: floatY 6s ease-in-out infinite;
@@ -77,11 +76,10 @@
       50% { transform: translateY(-12px) rotate(2deg); }
     }
 
-    /* Neon button */
+    /* Buttons */
     .btn-neon {
       background: linear-gradient(135deg, #bef264 0%, #a3e635 50%, #84cc16 100%);
-      color: #1e293b;
-      font-weight: 700;
+      color: #1e293b; font-weight: 700;
       box-shadow: 0 10px 30px -10px rgba(163,230,53,0.6), inset 0 1px 0 rgba(255,255,255,0.4);
       transition: all 0.2s ease;
     }
@@ -92,21 +90,14 @@
     }
     .btn-neon:active { transform: translateY(0); }
 
-    /* Royal button */
     .btn-royal {
       background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
-      color: white;
-      font-weight: 600;
+      color: white; font-weight: 600;
       box-shadow: 0 10px 30px -10px rgba(37,99,235,0.6);
       transition: all 0.2s ease;
     }
-    .btn-royal:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 18px 40px -10px rgba(37,99,235,0.7);
-      filter: brightness(1.1);
-    }
+    .btn-royal:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-    /* Card */
     .card {
       background: white;
       border-radius: 1rem;
@@ -114,7 +105,6 @@
       border: 1px solid rgba(0,0,0,0.05);
     }
 
-    /* Input focus */
     .input-field {
       transition: all 0.2s ease;
       border: 2px solid #e2e8f0;
@@ -125,342 +115,513 @@
       outline: none;
     }
 
-    /* Violation screen */
+    /* Layer transition */
+    .layer { display: none; }
+    .layer.active { display: flex; animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Toast */
+    .toast { animation: toastSlide 0.3s ease-out; }
+    @keyframes toastSlide { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    /* Lock overlay */
+    .lock-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      backdrop-filter: blur(8px);
+    }
     .violation-screen {
       background: radial-gradient(circle at center, #7f1d1d 0%, #450a0a 100%);
       color: white;
     }
-    .pulse-danger {
-      animation: pulseDanger 1.5s ease-in-out infinite;
-    }
+    .pulse-danger { animation: pulseDanger 1.5s ease-in-out infinite; }
     @keyframes pulseDanger {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.85; transform: scale(1.02); }
     }
 
-    /* Timer */
-    .timer-ring {
-      transform: rotate(-90deg);
-    }
-    .timer-progress {
-      transition: stroke-dashoffset 1s linear;
-    }
-
-    /* Question option */
-    .opt {
-      transition: all 0.15s ease;
+    /* Star rating */
+    .star {
       cursor: pointer;
-      border: 2px solid #e2e8f0;
+      transition: all 0.15s ease;
+      color: #cbd5e1;
     }
-    .opt:hover { border-color: #cbd5e1; background: #f8fafc; }
-    .opt.selected {
-      border-color: var(--neon-dark);
-      background: linear-gradient(135deg, #f7fee7 0%, #ecfccb 100%);
-      box-shadow: 0 4px 14px -4px rgba(132,204,22,0.4);
-    }
-
-    /* Toast */
-    .toast {
-      animation: toastSlide 0.3s ease-out;
-    }
-    @keyframes toastSlide {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+    .star:hover, .star.active {
+      color: #f59e0b;
+      transform: scale(1.15);
     }
 
-    /* Fade transitions */
-    .fade-in { animation: fadeIn 0.4s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    /* Question nav */
+    .qnav-btn {
+      transition: all 0.15s ease;
+    }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
+    /* Live indicator */
+    .pulse-dot { animation: pulseDot 1.5s ease-in-out infinite; }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.4); }
+    }
+
     /* Print */
     @media print {
       body * { visibility: hidden; }
       .print-area, .print-area * { visibility: visible; }
-      .print-area { position: absolute; left: 0; top: 0; width: 100%; }
-    }
-
-    /* Lock screen overlay */
-    .lock-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      backdrop-filter: blur(8px);
-    }
-
-    /* Nav pill active */
-    .nav-pill.active {
-      background: linear-gradient(135deg, #a3e635 0%, #84cc16 100%);
-      color: #1e293b;
-      font-weight: 600;
     }
   </style>
 </head>
 <body class="min-h-screen">
 
   <!-- ============================================================
-       SCREEN 1: WELCOME / LOGIN (Split-Screen)
+       LAYER 1: WELCOME SCREEN (with footer popup trigger)
        ============================================================ -->
-  <div id="screen-welcome" class="min-h-screen grid lg:grid-cols-2">
-    <!-- LEFT PANEL: Royal Blue with logo & info -->
-    <div class="royal-gradient text-white p-8 lg:p-12 flex flex-col justify-between relative hidden lg:flex">
-      <div class="relative z-10">
-        <div class="flex items-center gap-3 mb-12">
-          <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="CBT Logo"
-               class="w-14 h-14 logo-3d rounded-2xl bg-white/10 p-1.5 backdrop-blur" />
-          <div>
-            <h1 class="text-2xl font-extrabold tracking-tight">CBT Integrated System</h1>
-            <p class="text-blue-200 text-sm">Computer Based Test Platform</p>
+  <section id="layer-welcome" class="layer active royal-bg min-h-screen text-white relative">
+    <div class="relative z-10 w-full min-h-screen flex flex-col items-center justify-between p-6 sm:p-10">
+
+      <!-- Top: Logo & title -->
+      <div class="flex-1 flex flex-col items-center justify-center text-center max-w-2xl">
+        <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="ZCBT Logo"
+             class="w-28 h-28 sm:w-36 sm:h-36 logo-3d rounded-3xl bg-white/10 p-2 backdrop-blur mb-8" />
+
+        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-3">
+          Selamat Datang di <span class="text-lime-300">ZCBT</span>
+        </h1>
+        <p class="text-blue-100 text-lg sm:text-xl leading-relaxed mb-3 max-w-xl">
+          Aplikasi Computer Based Test yang aman, andal, dan mudah digunakan.
+          Dirancang untuk ujian online dengan sistem keamanan berlapis dan
+          deteksi pelanggaran otomatis.
+        </p>
+        <p class="text-blue-200 text-sm max-w-lg mb-10">
+          Pastikan Anda menggunakan browser modern (Chrome / Edge / Firefox) dan koneksi internet stabil sebelum memulai.
+        </p>
+
+        <!-- CTA -->
+        <button onclick="goToLayer2()" class="btn-neon px-12 py-4 rounded-2xl text-lg flex items-center gap-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Mulai
+        </button>
+        <p class="text-blue-300 text-xs mt-3">Klik "Mulai" untuk masuk mode fullscreen & melanjutkan ke halaman login</p>
+
+        <!-- Features preview -->
+        <div class="grid grid-cols-3 gap-4 mt-12 max-w-md">
+          <div class="bg-white/10 backdrop-blur rounded-2xl p-4 text-center border border-white/10">
+            <div class="text-2xl font-bold text-lime-300">100%</div>
+            <div class="text-xs text-blue-200 mt-1">Aman</div>
           </div>
-        </div>
-
-        <div class="space-y-6 max-w-md">
-          <h2 class="text-4xl font-extrabold leading-tight">
-            Selamat Datang, <span class="text-lime-300">Peserta!</span>
-          </h2>
-          <p class="text-blue-100 text-lg leading-relaxed">
-            Sistem ujian berbasis komputer yang aman, andal, dan mudah digunakan.
-            Masuk dengan kredensial dan token ujian yang diberikan oleh pengawas ruangan Anda.
-          </p>
-
-          <div class="grid grid-cols-2 gap-4 pt-4">
-            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-              <div class="text-3xl font-bold text-lime-300">100%</div>
-              <div class="text-blue-200 text-xs mt-1">Aman & Terenkripsi</div>
-            </div>
-            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-              <div class="text-3xl font-bold text-lime-300">24/7</div>
-              <div class="text-blue-200 text-xs mt-1">Tersedia Online</div>
-            </div>
+          <div class="bg-white/10 backdrop-blur rounded-2xl p-4 text-center border border-white/10">
+            <div class="text-2xl font-bold text-lime-300">5</div>
+            <div class="text-xs text-blue-200 mt-1">Tahapan</div>
+          </div>
+          <div class="bg-white/10 backdrop-blur rounded-2xl p-4 text-center border border-white/10">
+            <div class="text-2xl font-bold text-lime-300">Auto</div>
+            <div class="text-xs text-blue-200 mt-1">Proteksi</div>
           </div>
         </div>
       </div>
 
-      <div class="relative z-10 pt-12">
-        <div class="border-t border-white/10 pt-6 space-y-2">
-          <div class="flex items-center gap-2 text-blue-200 text-sm">
-            <span class="w-2 h-2 rounded-full bg-lime-400"></span>
-            Versi v1.0 • Build 2025.10.03
-          </div>
-          <div class="text-blue-300 text-xs">
-            Developed by <span class="font-semibold text-white">MB</span> • Computer Based Test Platform
-          </div>
+      <!-- Footer (clickable → about popup) -->
+      <footer class="w-full text-center pt-6 mt-8 border-t border-white/10">
+        <button onclick="showAppInfo()" class="text-blue-200 hover:text-lime-300 transition text-sm font-medium">
+          ZCBT • Computer Based Test Platform
+        </button>
+        <div class="text-blue-300 text-xs mt-1">
+          <button onclick="showAppInfo()" class="hover:text-lime-300 underline-offset-2 hover:underline">
+            ZCBT Integrated System • v1.0 | Developed by MB
+          </button>
         </div>
-      </div>
+      </footer>
     </div>
+  </section>
 
-    <!-- RIGHT PANEL: Login form -->
-    <div class="flex items-center justify-center p-6 sm:p-10 bg-white relative">
-      <div class="w-full max-w-md fade-in">
-        <!-- Mobile logo -->
-        <div class="lg:hidden flex items-center gap-3 mb-8 justify-center">
-          <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo" class="w-12 h-12 logo-3d" />
-          <div>
-            <h1 class="text-xl font-extrabold text-slate-900">CBT System</h1>
-            <p class="text-slate-500 text-xs">Computer Based Test</p>
-          </div>
+  <!-- ============================================================
+       LAYER 2: LOGIN SISWA (username + password)
+       ============================================================ -->
+  <section id="layer-login" class="layer royal-bg min-h-screen text-white relative">
+    <div class="relative z-10 w-full min-h-screen flex items-center justify-center p-6">
+
+      <div class="w-full max-w-md">
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" alt="Logo" class="w-16 h-16 mx-auto rounded-2xl bg-white/10 p-1.5 mb-4 logo-3d" />
+          <h2 class="text-3xl font-extrabold">Login Peserta</h2>
+          <p class="text-blue-200 mt-2 text-sm">Masukkan username dan password yang telah diberikan.</p>
         </div>
 
-        <div class="mb-8">
-          <div class="inline-block px-3 py-1 rounded-full bg-lime-100 text-lime-700 text-xs font-semibold mb-3">
-            PESERTA UJIAN
-          </div>
-          <h2 class="text-3xl font-extrabold text-slate-900">Masuk ke Sistem</h2>
-          <p class="text-slate-500 mt-2">Silakan masukkan data sesuai kartu ujian Anda.</p>
-        </div>
-
-        <form id="login-form" class="space-y-5">
+        <!-- Form -->
+        <form id="login-form" class="space-y-5 bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/10">
           <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Kelas</label>
-            <select id="login-kelas" required
-              class="input-field w-full px-4 py-3 rounded-xl bg-white">
-              <option value="">— Pilih Kelas —</option>
-              <option value="XII-IPA-1">XII-IPA-1</option>
-              <option value="XII-IPA-2">XII-IPA-2</option>
-              <option value="XII-IPS-1">XII-IPS-1</option>
-              <option value="XII-IPS-2">XII-IPS-2</option>
-              <option value="XI-IPA-1">XI-IPA-1</option>
-              <option value="XI-IPA-2">XI-IPA-2</option>
-              <option value="XI-IPS-1">XI-IPS-1</option>
-              <option value="XI-IPS-2">XI-IPS-2</option>
-            </select>
+            <label class="block text-sm font-semibold text-blue-100 mb-1.5">Username</label>
+            <input id="login-username" type="text" required placeholder="cth: siswa001" autocomplete="off"
+              class="w-full px-4 py-3 rounded-xl bg-white text-slate-900 border-2 border-transparent focus:border-lime-400 focus:outline-none focus:ring-4 focus:ring-lime-400/30 transition" />
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Username</label>
-            <input id="login-username" type="text" required placeholder="cth: siswa001"
-              class="input-field w-full px-4 py-3 rounded-xl" />
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+            <label class="block text-sm font-semibold text-blue-100 mb-1.5">Password</label>
             <div class="relative">
-              <input id="login-password" type="password" required placeholder="••••••••"
-                class="input-field w-full px-4 py-3 pr-12 rounded-xl" />
+              <input id="login-password" type="password" required placeholder="••••••••" autocomplete="off"
+                class="w-full px-4 py-3 pr-12 rounded-xl bg-white text-slate-900 border-2 border-transparent focus:border-lime-400 focus:outline-none focus:ring-4 focus:ring-lime-400/30 transition" />
               <button type="button" onclick="togglePwd('login-password', this)"
                 class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                <svg class="w-5 h-5 eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
               </button>
             </div>
           </div>
 
-          <div>
-            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Token Ujian (dari Proctor)</label>
-            <input id="login-token" type="text" required placeholder="TKN-XXXX-2025"
-              class="input-field w-full px-4 py-3 rounded-xl font-mono uppercase tracking-wider" />
-            <p class="text-xs text-slate-400 mt-1">Token mengikat Anda ke pengawas ruangan terkait.</p>
-          </div>
-
           <button type="submit" class="btn-neon w-full py-3.5 rounded-xl text-base">
-            Masuk & Mulai
+            Masuk
           </button>
 
-          <p class="text-center text-xs text-slate-400 pt-2">
-            Dengan masuk, Anda menyetujui ketentuan ujian & tidak akan berbuat kecurangan.
-          </p>
+          <button type="button" onclick="backToLayer1()" class="w-full text-center text-blue-200 hover:text-lime-300 text-sm transition">
+            ← Kembali ke Beranda
+          </button>
         </form>
 
         <!-- Footer -->
-        <div class="mt-10 pt-6 border-t border-slate-100 text-center">
-          <button onclick="showAppInfo()" class="text-xs text-slate-400 hover:text-royal-blue transition">
-            CBT Integrated System • v1.0 | Developed by MB
+        <div class="mt-8 text-center">
+          <button onclick="showAppInfo()" class="text-xs text-blue-300 hover:text-lime-300 transition">
+            ZCBT Integrated System • v1.0 | Developed by MB
           </button>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- ============================================================
-       SCREEN 2: KONFIRMASI DATA (setelah login, sebelum fullscreen)
+       LAYER 3: KONFIRMASI DATA + INPUT TOKEN
        ============================================================ -->
-  <div id="screen-confirm" class="hidden min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-blue-50">
-    <div class="card max-w-lg w-full p-8 fade-in">
-      <div class="text-center mb-6">
-        <div class="inline-flex w-20 h-20 items-center justify-center rounded-full bg-lime-100 mb-4">
-          <svg class="w-10 h-10 text-lime-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+  <section id="layer-confirm" class="layer min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 items-center justify-center p-6">
+    <div class="w-full max-w-lg">
+
+      <div class="card p-8 fade-in">
+        <div class="text-center mb-6">
+          <div class="inline-flex w-16 h-16 items-center justify-center rounded-full bg-blue-100 mb-4">
+            <svg class="w-8 h-8 text-royal-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-extrabold text-slate-900">Konfirmasi Data Peserta</h2>
+          <p class="text-slate-500 mt-1 text-sm">Pastikan data berikut benar. Masukkan token ujian dari pengawas untuk memulai.</p>
         </div>
-        <h2 class="text-2xl font-extrabold text-slate-900">Konfirmasi Data Peserta</h2>
-        <p class="text-slate-500 mt-1">Pastikan data di bawah sudah benar sebelum memulai ujian.</p>
-      </div>
 
-      <div class="bg-slate-50 rounded-xl p-5 space-y-3 mb-6">
-        <div class="flex justify-between"><span class="text-slate-500">Nama</span><span id="cf-nama" class="font-semibold text-slate-900"></span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Username</span><span id="cf-username" class="font-mono text-slate-900"></span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Kelas</span><span id="cf-kelas" class="font-semibold text-slate-900"></span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Ruangan</span><span id="cf-ruangan" class="font-semibold text-slate-900"></span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Sesi</span><span id="cf-sesi" class="font-semibold text-slate-900"></span></div>
-        <div class="flex justify-between"><span class="text-slate-500">Pengawas</span><span id="cf-proctor" class="font-semibold text-slate-900"></span></div>
-      </div>
+        <!-- Data siswa dari DB -->
+        <div class="bg-slate-50 rounded-xl p-5 space-y-3 mb-5">
+          <div class="flex justify-between"><span class="text-slate-500 text-sm">Nama Lengkap</span><span id="cf-nama" class="font-semibold text-slate-900"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500 text-sm">Username</span><span id="cf-username" class="font-mono text-slate-900"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500 text-sm">Kelas</span><span id="cf-kelas" class="font-semibold text-slate-900"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500 text-sm">Ruangan</span><span id="cf-ruangan" class="font-semibold text-slate-900"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500 text-sm">Sesi Ujian</span><span id="cf-sesi" class="font-semibold text-slate-900"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500 text-sm">Mata Pelajaran</span><span id="cf-mapel" class="font-semibold text-slate-900"></span></div>
+          <div class="flex justify-between"><span class="text-slate-500 text-sm">Pengawas</span><span id="cf-proctor" class="font-semibold text-slate-900"></span></div>
+        </div>
 
-      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-        <div class="flex gap-2">
-          <svg class="w-5 h-5 text-amber-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
-          <div class="text-sm text-amber-800">
-            <strong>Peringatan:</strong> Setelah klik "Mulai", browser akan masuk mode Fullscreen. Jangan keluar dari mode fullscreen, membuka tab baru, atau menggunakan shortcut mencurigakan — sistem akan otomatis mengunci layar Anda.
+        <!-- Token input -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Token Ujian (dari Proctor)</label>
+          <input id="exam-token" type="text" required placeholder="TKN-XXXX-2025"
+            class="input-field w-full px-4 py-3 rounded-xl font-mono uppercase tracking-wider text-center text-lg" />
+          <p class="text-xs text-slate-400 mt-1">Token diberikan oleh pengawas ruangan saat ujian dimulai.</p>
+        </div>
+
+        <!-- Warning -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-5">
+          <div class="flex gap-2">
+            <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+            </svg>
+            <div class="text-sm text-amber-800">
+              <strong>Peringatan:</strong> Setelah klik "Kerjakan Ujian", halaman soal akan aktif dengan proteksi ketat:
+              <ul class="list-disc list-inside mt-1.5 text-xs space-y-0.5">
+                <li>Dilarang membuka tab baru atau keluar fullscreen</li>
+                <li>Klik kanan akan dinonaktifkan</li>
+                <li>Shortcut mencurigakan akan terdeteksi otomatis</li>
+                <li>Pelanggaran akan mengunci layar & lapor ke proctor</li>
+              </ul>
+            </div>
           </div>
         </div>
+
+        <div class="flex gap-3">
+          <button onclick="backToLayer2()" class="flex-1 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition">Batal</button>
+          <button onclick="startExam()" class="flex-1 btn-neon py-3 rounded-xl">Kerjakan Ujian →</button>
+        </div>
       </div>
 
-      <div class="flex gap-3">
-        <button onclick="cancelLogin()" class="flex-1 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition">Batal</button>
-        <button onclick="startExamFullscreen()" class="flex-1 btn-neon py-3 rounded-xl">Mulai Ujian</button>
+      <div class="mt-6 text-center">
+        <button onclick="showAppInfo()" class="text-xs text-slate-400 hover:text-royal-blue transition">
+          ZCBT Integrated System • v1.0 | Developed by MB
+        </button>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- ============================================================
-       SCREEN 3: UJIAN / EXAM (Fullscreen mode)
+       LAYER 4: HALAMAN SOAL (with anti-cheat)
+       Support: embedded Google Form URL OR built-in question bank
        ============================================================ -->
-  <div id="screen-exam" class="hidden min-h-screen bg-slate-50">
-    <!-- Top bar: timer & info -->
-    <div class="bg-white border-b border-slate-200 sticky top-0 z-30">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+  <section id="layer-exam" class="layer min-h-screen bg-slate-100 flex-col">
+    <!-- Top bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="w-9 h-9 rounded-lg" alt="Logo" />
           <div class="hidden sm:block">
-            <div class="text-sm font-bold text-slate-900">CBT Integrated System</div>
-            <div class="text-xs text-slate-500">Asesmen Ujian</div>
+            <div class="text-sm font-bold text-slate-900">ZCBT • Asesmen Ujian</div>
+            <div class="text-xs text-slate-500" id="exam-user-info">—</div>
           </div>
         </div>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
+          <!-- Protection indicator -->
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-50 text-red-700 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-red-500 pulse-dot"></span>
+            <span>PROTECTED MODE</span>
+          </div>
           <!-- Timer -->
           <div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white">
-            <svg class="w-5 h-5 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <svg class="w-5 h-5 text-lime-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
             <span id="exam-timer" class="font-mono font-bold text-lg">90:00</span>
           </div>
-          <button onclick="submitExam()" class="btn-neon px-5 py-2 rounded-xl text-sm hidden sm:inline-flex">Kumpulkan</button>
+          <button onclick="finishExam()" class="btn-neon px-4 py-2 rounded-xl text-sm">Selesai</button>
         </div>
       </div>
+    </header>
+
+    <!-- Warning banner (only visible on exam layer) -->
+    <div class="bg-red-600 text-white text-center py-2 px-4 text-xs sm:text-sm font-semibold">
+      ⚠️ DILARANG membuka tab baru, keluar fullscreen, atau klik kanan. Pelanggaran akan otomatis mengunci layar.
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid lg:grid-cols-[1fr_280px] gap-6">
-      <!-- Main: Question -->
-      <main class="card p-6 lg:p-8">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide">Soal No.</div>
-            <div class="text-3xl font-extrabold text-slate-900" id="q-number">1</div>
-          </div>
-          <div class="text-right">
-            <div class="text-xs text-slate-500">Mata Pelajaran</div>
-            <div class="font-bold text-slate-900" id="q-mapel">—</div>
-          </div>
+    <!-- Main content: iframe external OR built-in questions -->
+    <main class="flex-1 max-w-6xl mx-auto w-full p-4 sm:p-6">
+
+      <!-- MODE 1: External soal URL (Google Form, etc.) -->
+      <div id="exam-external" class="hidden card p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-bold text-slate-900">Soal Ujian</h3>
+          <a id="exam-external-link" href="#" target="_blank" rel="noopener noreferrer"
+             class="text-xs text-royal-blue hover:underline">Buka di tab baru ↗</a>
         </div>
+        <iframe id="exam-iframe" class="w-full rounded-xl border-2 border-slate-200" style="height: 70vh;"
+                title="Soal Ujian"></iframe>
+        <p class="text-xs text-slate-400 mt-2 text-center">
+          Pastikan jawaban terkirim di dalam iframe di atas sebelum klik "Selesai".
+        </p>
+      </div>
 
-        <div class="bg-slate-50 rounded-xl p-5 mb-6 min-h-[120px]">
-          <p id="q-text" class="text-lg text-slate-800 leading-relaxed"></p>
-        </div>
-
-        <div id="q-options" class="space-y-3"></div>
-
-        <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-100">
-          <button id="btn-prev" onclick="prevQuestion()" class="px-5 py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition disabled:opacity-40 disabled:cursor-not-allowed">← Sebelumnya</button>
-          <button id="btn-next" onclick="nextQuestion()" class="btn-royal px-5 py-2.5 rounded-xl">Berikutnya →</button>
-        </div>
-      </main>
-
-      <!-- Sidebar: Question Navigator -->
-      <aside class="lg:sticky lg:top-20 h-fit">
-        <div class="card p-5">
-          <h3 class="text-sm font-bold text-slate-900 mb-3">Navigasi Soal</h3>
-          <div id="q-nav" class="grid grid-cols-5 gap-2"></div>
-
-          <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-xs">
-            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-white border-2 border-slate-300"></span>Belum dijawab</div>
-            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-lime-400"></span>Sudah dijawab</div>
-            <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-blue-500"></span>Soal saat ini</div>
+      <!-- MODE 2: Built-in question bank -->
+      <div id="exam-native" class="hidden grid lg:grid-cols-[1fr_280px] gap-6">
+        <!-- Question -->
+        <div class="card p-6 lg:p-8">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <div class="text-xs text-slate-500 font-semibold uppercase tracking-wide">Soal No.</div>
+              <div class="text-3xl font-extrabold text-slate-900" id="q-number">1</div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-slate-500">Mata Pelajaran</div>
+              <div class="font-bold text-slate-900" id="q-mapel">—</div>
+            </div>
           </div>
 
-          <button onclick="submitExam()" class="btn-neon w-full py-2.5 rounded-xl text-sm mt-5">Kumpulkan Jawaban</button>
-        </div>
+          <div class="bg-slate-50 rounded-xl p-5 mb-6 min-h-[120px]">
+            <p id="q-text" class="text-lg text-slate-800 leading-relaxed"></p>
+          </div>
 
-        <!-- Broadcast messages -->
-        <div class="card p-5 mt-4">
-          <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
-            <svg class="w-4 h-4 text-royal-blue" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 13h12a1 1 0 00.707-1.707L16 11V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
-            Pesan Pengawas
-          </h3>
-          <div id="broadcast-list" class="space-y-2 max-h-48 overflow-y-auto text-sm">
-            <p class="text-slate-400 text-xs">Belum ada pesan.</p>
+          <div id="q-options" class="space-y-3"></div>
+
+          <div class="flex justify-between items-center mt-8 pt-6 border-t border-slate-100">
+            <button id="btn-prev" onclick="prevQuestion()" class="px-5 py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition disabled:opacity-40 disabled:cursor-not-allowed">← Sebelumnya</button>
+            <button id="btn-next" onclick="nextQuestion()" class="btn-royal px-5 py-2.5 rounded-xl">Berikutnya →</button>
           </div>
         </div>
-      </aside>
-    </div>
-  </div>
+
+        <!-- Sidebar: Question Navigator -->
+        <aside class="lg:sticky lg:top-24 h-fit">
+          <div class="card p-5">
+            <h3 class="text-sm font-bold text-slate-900 mb-3">Navigasi Soal</h3>
+            <div id="q-nav" class="grid grid-cols-5 gap-2"></div>
+            <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-xs">
+              <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-white border-2 border-slate-300"></span>Belum dijawab</div>
+              <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-lime-400"></span>Sudah dijawab</div>
+              <div class="flex items-center gap-2"><span class="w-3 h-3 rounded bg-blue-500"></span>Soal saat ini</div>
+            </div>
+            <button onclick="finishExam()" class="btn-neon w-full py-2.5 rounded-xl text-sm mt-5">Kumpulkan Jawaban</button>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-3 text-center">
+      <button onclick="showAppInfo()" class="text-xs text-slate-400 hover:text-royal-blue transition">
+        ZCBT Integrated System • v1.0 | Developed by MB
+      </button>
+    </footer>
+  </section>
 
   <!-- ============================================================
-       SCREEN 4: LOCK / VIOLATION OVERLAY
+       LAYER 5: HASIL SUBMIT + KUESIONER + FINAL THANKS
        ============================================================ -->
-  <div id="screen-lock" class="hidden lock-overlay violation-screen flex items-center justify-center p-6">
+  <section id="layer-result" class="layer royal-bg min-h-screen text-white relative">
+    <div class="relative z-10 w-full min-h-screen flex items-center justify-center p-6">
+
+      <!-- 5A: Thank you + isi kuesioner button -->
+      <div id="result-thanks" class="max-w-xl w-full text-center fade-in">
+        <div class="inline-flex w-24 h-24 items-center justify-center rounded-full bg-lime-400/20 backdrop-blur mb-6 border-4 border-lime-400">
+          <svg class="w-12 h-12 text-lime-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h2 class="text-4xl font-extrabold mb-3">Terima Kasih!</h2>
+        <p class="text-blue-100 text-lg mb-2">Anda telah menyelesaikan asesmen ujian dengan jujur.</p>
+        <p class="text-blue-200 text-sm mb-8">Jawaban Anda telah tersimpan dengan aman di sistem.</p>
+
+        <div class="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/10 text-left">
+          <div class="text-xs uppercase tracking-wide text-lime-300 mb-2">Ringkasan</div>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-blue-100">Nama</span><span id="rs-nama" class="font-semibold"></span></div>
+            <div class="flex justify-between"><span class="text-blue-100">Sesi</span><span id="rs-sesi" class="font-semibold"></span></div>
+            <div class="flex justify-between"><span class="text-blue-100">Waktu Selesai</span><span id="rs-waktu" class="font-mono"></span></div>
+          </div>
+        </div>
+
+        <button onclick="showKuesioner()" class="btn-neon w-full py-3.5 rounded-xl flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+          </svg>
+          Isi Kuesioner Evaluasi
+        </button>
+        <p class="text-blue-300 text-xs mt-4">Kuesioner sangat membantu kami meningkatkan kualitas aplikasi & soal.</p>
+      </div>
+
+      <!-- 5B: Kuesioner form -->
+      <div id="result-kuesioner" class="hidden max-w-xl w-full">
+        <div class="card p-8 fade-in">
+          <div class="text-center mb-6">
+            <div class="inline-flex w-16 h-16 items-center justify-center rounded-full bg-blue-100 mb-4">
+              <svg class="w-8 h-8 text-royal-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-900">Kuesioner Evaluasi</h2>
+            <p class="text-slate-500 mt-1 text-sm">Bantu kami meningkatkan kualitas aplikasi & soal.</p>
+          </div>
+
+          <form id="survey-form" class="space-y-6">
+            <!-- Q1: Kemudahan Aplikasi -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-2">1. Tingkat Kemudahan Aplikasi</label>
+              <p class="text-xs text-slate-400 mb-3">Seberapa mudah aplikasi ZCBT digunakan?</p>
+              <div class="flex justify-between gap-2" data-q="kemudahan_aplikasi">
+                <button type="button" data-v="1" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">1</div>
+                  <div class="text-xs text-slate-400 mt-1">Sangat Sulit</div>
+                </button>
+                <button type="button" data-v="2" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">2</div>
+                  <div class="text-xs text-slate-400 mt-1">Sulit</div>
+                </button>
+                <button type="button" data-v="3" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">3</div>
+                  <div class="text-xs text-slate-400 mt-1">Cukup</div>
+                </button>
+                <button type="button" data-v="4" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">4</div>
+                  <div class="text-xs text-slate-400 mt-1">Mudah</div>
+                </button>
+                <button type="button" data-v="5" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">5</div>
+                  <div class="text-xs text-slate-400 mt-1">Sangat Mudah</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Q2: Kemudahan Soal -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-2">2. Tingkat Kemudahan Soal</label>
+              <p class="text-xs text-slate-400 mb-3">Seberapa mudah soal ujian Anda pahami?</p>
+              <div class="flex justify-between gap-2" data-q="kemudahan_soal">
+                <button type="button" data-v="1" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">1</div>
+                  <div class="text-xs text-slate-400 mt-1">Sangat Sulit</div>
+                </button>
+                <button type="button" data-v="2" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">2</div>
+                  <div class="text-xs text-slate-400 mt-1">Sulit</div>
+                </button>
+                <button type="button" data-v="3" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">3</div>
+                  <div class="text-xs text-slate-400 mt-1">Cukup</div>
+                </button>
+                <button type="button" data-v="4" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">4</div>
+                  <div class="text-xs text-slate-400 mt-1">Mudah</div>
+                </button>
+                <button type="button" data-v="5" class="rating-card flex-1 py-4 rounded-xl border-2 border-slate-200 hover:border-amber-400 transition">
+                  <div class="text-2xl font-bold text-slate-700">5</div>
+                  <div class="text-xs text-slate-400 mt-1">Sangat Mudah</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Q3: Saran & Masukan -->
+            <div>
+              <label class="block text-sm font-semibold text-slate-700 mb-2">3. Saran dan Masukan</label>
+              <textarea id="survey-saran" rows="4" placeholder="Tuliskan kritik, saran, atau masukan Anda untuk ZCBT..."
+                class="input-field w-full px-4 py-3 rounded-xl resize-none"></textarea>
+            </div>
+
+            <div class="flex gap-3">
+              <button type="button" onclick="skipKuesioner()" class="flex-1 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition">Lewati</button>
+              <button type="submit" class="flex-1 btn-neon py-3 rounded-xl">Kirim Kuesioner</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- 5C: Final thanks + back to login -->
+      <div id="result-final" class="hidden max-w-xl w-full text-center fade-in">
+        <div class="inline-flex w-24 h-24 items-center justify-center rounded-full bg-lime-400/20 backdrop-blur mb-6 border-4 border-lime-400">
+          <svg class="w-12 h-12 text-lime-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+          </svg>
+        </div>
+        <h2 class="text-4xl font-extrabold mb-3">Selesai!</h2>
+        <p class="text-blue-100 text-lg mb-2">Terima kasih sudah mengerjakan asesmen ZCBT.</p>
+        <p class="text-blue-200 text-sm mb-8">Sesi Anda telah ditutup. Anda dapat keluar dari mode fullscreen.</p>
+
+        <button onclick="backToLogin()" class="btn-neon w-full py-3.5 rounded-xl flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Kembali ke Halaman Login
+        </button>
+        <p class="text-blue-300 text-xs mt-4">Tombol di atas akan keluar dari mode fullscreen & membersihkan sesi.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LOCK OVERLAY (Violation screen)
+       ============================================================ -->
+  <div id="lock-overlay" class="hidden lock-overlay violation-screen flex items-center justify-center p-6">
     <div class="max-w-md text-center fade-in">
       <div class="pulse-danger inline-flex w-24 h-24 items-center justify-center rounded-full bg-red-500/20 mb-6 border-4 border-red-400">
-        <svg class="w-12 h-12 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <svg class="w-12 h-12 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
       </div>
       <h2 class="text-3xl font-extrabold mb-3">Layar Terkunci!</h2>
       <p class="text-red-200 text-lg mb-2" id="violation-reason">Terdeteksi pelanggaran ujian.</p>
@@ -478,109 +639,17 @@
   </div>
 
   <!-- ============================================================
-       SCREEN 5: KUESIONER EVALUASI
-       ============================================================ -->
-  <div id="screen-survey" class="hidden min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-50 to-blue-50">
-    <div class="card max-w-xl w-full p-8 fade-in">
-      <div class="text-center mb-6">
-        <div class="inline-flex w-16 h-16 items-center justify-center rounded-full bg-blue-100 mb-4">
-          <svg class="w-8 h-8 text-royal-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        </div>
-        <h2 class="text-2xl font-extrabold text-slate-900">Kuesioner Evaluasi</h2>
-        <p class="text-slate-500 mt-1">Bantu kami meningkatkan kualitas aplikasi & soal.</p>
-      </div>
-
-      <form id="survey-form" class="space-y-6">
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-2">Tingkat kemudahan aplikasi</label>
-          <div class="flex gap-2" data-q="kemudahan_aplikasi">
-            <button type="button" data-v="1" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">1</button>
-            <button type="button" data-v="2" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">2</button>
-            <button type="button" data-v="3" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">3</button>
-            <button type="button" data-v="4" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">4</button>
-            <button type="button" data-v="5" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">5</button>
-          </div>
-          <p class="text-xs text-slate-400 mt-1">1 = Sangat sulit, 5 = Sangat mudah</p>
-        </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-2">Tingkat kemudahan soal</label>
-          <div class="flex gap-2" data-q="kemudahan_soal">
-            <button type="button" data-v="1" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">1</button>
-            <button type="button" data-v="2" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">2</button>
-            <button type="button" data-v="3" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">3</button>
-            <button type="button" data-v="4" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">4</button>
-            <button type="button" data-v="5" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">5</button>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-2">Kejelasan soal</label>
-          <div class="flex gap-2" data-q="kejelasan_soal">
-            <button type="button" data-v="1" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">1</button>
-            <button type="button" data-v="2" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">2</button>
-            <button type="button" data-v="3" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">3</button>
-            <button type="button" data-v="4" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">4</button>
-            <button type="button" data-v="5" class="rating-btn flex-1 py-3 rounded-xl border-2 border-slate-200 font-bold hover:border-blue-400">5</button>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-2">Kritik & Saran</label>
-          <textarea id="survey-kritik" rows="4" placeholder="Tuliskan kritik dan saran Anda di sini..."
-            class="input-field w-full px-4 py-3 rounded-xl resize-none"></textarea>
-        </div>
-
-        <button type="submit" class="btn-neon w-full py-3.5 rounded-xl">Kirim Kuesioner</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       SCREEN 6: TERIMA KASIH / LOGOUT
-       ============================================================ -->
-  <div id="screen-thanks" class="hidden min-h-screen flex items-center justify-center p-6 royal-gradient text-white">
-    <div class="max-w-lg w-full text-center fade-in relative z-10">
-      <div class="inline-flex w-24 h-24 items-center justify-center rounded-full bg-lime-400/20 backdrop-blur mb-6 border-4 border-lime-400">
-        <svg class="w-12 h-12 text-lime-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-      </div>
-      <h2 class="text-4xl font-extrabold mb-3">Terima Kasih!</h2>
-      <p class="text-blue-100 text-lg mb-2">Anda telah menyelesaikan asesmen CBT.</p>
-      <p class="text-blue-200 text-sm mb-8">Jawaban Anda telah tersimpan dengan aman.</p>
-
-      <div class="bg-white/10 backdrop-blur rounded-2xl p-5 mb-8 border border-white/10 text-left">
-        <div class="text-xs uppercase tracking-wide text-lime-300 mb-2">Ringkasan</div>
-        <div class="space-y-2 text-sm">
-          <div class="flex justify-between"><span class="text-blue-100">Nama</span><span id="tk-nama" class="font-semibold"></span></div>
-          <div class="flex justify-between"><span class="text-blue-100">Sesi</span><span id="tk-sesi" class="font-semibold"></span></div>
-          <div class="flex justify-between"><span class="text-blue-100">Waktu Selesai</span><span id="tk-waktu" class="font-mono"></span></div>
-        </div>
-      </div>
-
-      <button onclick="safeLogout()" class="btn-neon w-full py-3.5 rounded-xl">
-        Logout & Keluar
-      </button>
-      <p class="text-blue-300 text-xs mt-4">Tombol di atas akan keluar dari mode fullscreen dan membersihkan sesi.</p>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       TOAST NOTIFICATIONS
-       ============================================================ -->
-  <div id="toast-container" class="fixed top-4 right-4 z-[10000] space-y-2"></div>
-
-  <!-- ============================================================
-       FOOTER POPUP: APP INFO MODAL
+       APP INFO MODAL (footer popup)
        ============================================================ -->
   <div id="modal-info" class="hidden fixed inset-0 z-[10001] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="card max-w-md w-full p-8 fade-in">
       <div class="text-center mb-6">
         <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="w-20 h-20 mx-auto rounded-2xl mb-3" alt="Logo" />
-        <h3 class="text-xl font-extrabold text-slate-900">CBT Integrated System</h3>
+        <h3 class="text-xl font-extrabold text-slate-900">ZCBT Integrated System</h3>
         <p class="text-slate-500 text-sm">Computer Based Test Platform</p>
       </div>
       <div class="space-y-3 text-sm">
-        <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Nama Aplikasi</span><span class="font-semibold text-slate-900">CBT Integrated System</span></div>
+        <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Nama Aplikasi</span><span class="font-semibold text-slate-900">ZCBT Integrated System</span></div>
         <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Pengembang</span><span class="font-semibold text-slate-900">MB</span></div>
         <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Build</span><span class="font-mono text-slate-900">2025.10.03</span></div>
         <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Versi</span><span class="font-mono text-slate-900">v1.0</span></div>
@@ -591,89 +660,78 @@
   </div>
 
   <!-- ============================================================
-       BROADCAST POPUP NOTIFICATION
+       TOAST CONTAINER
        ============================================================ -->
-  <div id="modal-broadcast" class="hidden fixed inset-0 z-[10001] bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="card max-w-md w-full p-6 fade-in border-t-4 border-t-royal-blue">
-      <div class="flex items-start gap-3">
-        <div class="inline-flex w-12 h-12 items-center justify-center rounded-full bg-blue-100 flex-shrink-0">
-          <svg class="w-6 h-6 text-royal-blue" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 13h12a1 1 0 00.707-1.707L16 11V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
-        </div>
-        <div class="flex-1">
-          <div class="text-xs font-semibold text-royal-blue uppercase tracking-wide" id="bc-tipe">PENGUMUMAN</div>
-          <div class="text-sm text-slate-700 mt-1" id="bc-pesan"></div>
-          <div class="text-xs text-slate-400 mt-2" id="bc-time"></div>
-        </div>
-      </div>
-      <button onclick="closeBroadcast()" class="btn-royal w-full py-2.5 rounded-xl mt-4 text-sm">Tutup</button>
-    </div>
-  </div>
+  <div id="toast-container" class="fixed top-4 right-4 z-[10000] space-y-2"></div>
 
   <script>
     /* ============================================================
        CONFIG - Ganti WEB_APP_URL dengan URL deploy GAS Anda
+       SOAL_URL: URL Google Form / external soal (opsional)
        ============================================================ */
     const CONFIG = {
-      WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx4FibRwkdewIqRvDN3VWPhNxHLgdgXOOkqa87PoiXOiW05TocfQ6pmLPutbI77SxlaZg/exec', // kosongkan untuk mode demo (data lokal)
+      WEB_APP_URL: '
+https://script.google.com/macros/s/AKfycbzsb5wJ_qYfIisMMc_tNcDBpcD-cPyoO6kwvBQh9m2rZPqj1oNSoIIqu51xBpZVtC0/exec',  // kosong = mode demo (data lokal)
+      SOAL_URL: '',     // Isi dengan URL Google Form jika soal external (cth: 'https://docs.google.com/forms/...')
       LOGO: 'https://yanuar-moga.github.io/cbt/assets/logo.png',
-      APP_NAME: 'CBT Integrated System',
+      APP_NAME: 'ZCBT',
       VERSION: 'v1.0',
       DEVELOPER: 'MB',
       EMAIL: 'yanuar.b@gmail.com'
     };
 
     /* ============================================================
-       STATE & SESSION MANAGEMENT (LocalStorage)
+       STATE & SESSION (LocalStorage)
        ============================================================ */
-    const STORAGE_KEY = 'cbt_client_session';
-
-    function loadSession() {
-      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); }
-      catch (e) { return null; }
-    }
-    function saveSession(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-    function clearSession() {
-      localStorage.removeItem(STORAGE_KEY);
-    }
+    const STORAGE_KEY = 'zcbt_client_session';
+    function loadSession() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (e) { return null; } }
+    function saveSession(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+    function clearSession() { localStorage.removeItem(STORAGE_KEY); }
 
     let state = {
+      currentLayer: 1,
       user: null,
+      siswa: null,           // data siswa dari DB
       examStarted: false,
       examEndTime: null,
       currentQuestion: 0,
       questions: [],
       answers: {},
       isLocked: false,
-      lastBroadcastCheck: null,
       timerInterval: null,
-      broadcastInterval: null
+      antiCheatActive: false,
+      surveyRatings: { kemudahan_aplikasi: 0, kemudahan_soal: 0 }
     };
 
     /* ============================================================
        DEMO DATA (used when WEB_APP_URL is empty)
        ============================================================ */
+    const DEMO_SISWA_DB = [
+      { username: 'siswa001', password: 'siswa123', nama_lengkap: 'Ahmad Fadli', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', mata_pelajaran: 'Matematika', proctor_username: 'proctor01', token_ujian: 'TKN-AB12-2025' },
+      { username: 'siswa002', password: 'siswa123', nama_lengkap: 'Dewi Lestari', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', mata_pelajaran: 'Matematika', proctor_username: 'proctor01', token_ujian: 'TKN-CD34-2025' },
+      { username: 'siswa003', password: 'siswa123', nama_lengkap: 'Rizki Pratama', kelas: 'XII-IPS-2', ruangan: 'Ruang B-201', sesi: 'Sesi 2', mata_pelajaran: 'Bahasa Inggris', proctor_username: 'proctor02', token_ujian: 'TKN-EF56-2025' },
+      { username: 'siswa004', password: 'siswa123', nama_lengkap: 'Siti Nurhaliza', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', mata_pelajaran: 'Matematika', proctor_username: 'proctor01', token_ujian: 'TKN-GH78-2025' },
+      { username: 'siswa005', password: 'siswa123', nama_lengkap: 'Bayu Saputra', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', mata_pelajaran: 'Matematika', proctor_username: 'proctor01', token_ujian: 'TKN-IJ90-2025' }
+    ];
+
     const DEMO_QUESTIONS = [
-      { id_soal: 'Q001', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Hasil dari 12 × 8 adalah ...', opsi_a: '96', opsi_b: '108', opsi_c: '84', opsi_d: '112', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q002', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Akar kuadrat dari 144 adalah ...', opsi_a: '10', opsi_b: '11', opsi_c: '12', opsi_d: '13', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q003', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Hasil dari 25% × 200 adalah ...', opsi_a: '25', opsi_b: '50', opsi_c: '75', opsi_d: '100', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q004', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Berapakah hasil dari 7² (tujuh kuadrat)?', opsi_a: '14', opsi_b: '21', opsi_c: '49', opsi_d: '56', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q005', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Jika 2x + 6 = 18, maka nilai x adalah ...', opsi_a: '4', opsi_b: '5', opsi_c: '6', opsi_d: '7', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q006', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Hasil dari 15 + 27 - 12 adalah ...', opsi_a: '28', opsi_b: '30', opsi_c: '32', opsi_d: '34', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q007', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Berapa derajat jumlah sudut dalam segitiga?', opsi_a: '90°', opsi_b: '120°', opsi_c: '180°', opsi_d: '360°', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q008', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Hasil dari 100 ÷ 4 adalah ...', opsi_a: '20', opsi_b: '25', opsi_c: '30', opsi_d: '40', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q009', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Bilangan prima antara 1 dan 10 berjumlah ...', opsi_a: '3', opsi_b: '4', opsi_c: '5', opsi_d: '6', opsi_e: '', bobot_nilai: 2 },
-      { id_soal: 'Q010', mata_pelajaran: 'Matematika', tipe_soal: 'pg', pertanyaan: 'Luas persegi dengan sisi 9 cm adalah ... cm²', opsi_a: '36', opsi_b: '63', opsi_c: '81', opsi_d: '90', opsi_e: '', bobot_nilai: 2 }
+      { id_soal: 'Q001', mata_pelajaran: 'Matematika', pertanyaan: 'Hasil dari 12 × 8 adalah ...', opsi_a: '96', opsi_b: '108', opsi_c: '84', opsi_d: '112', bobot_nilai: 2 },
+      { id_soal: 'Q002', mata_pelajaran: 'Matematika', pertanyaan: 'Akar kuadrat dari 144 adalah ...', opsi_a: '10', opsi_b: '11', opsi_c: '12', opsi_d: '13', bobot_nilai: 2 },
+      { id_soal: 'Q003', mata_pelajaran: 'Matematika', pertanyaan: 'Hasil dari 25% × 200 adalah ...', opsi_a: '25', opsi_b: '50', opsi_c: '75', opsi_d: '100', bobot_nilai: 2 },
+      { id_soal: 'Q004', mata_pelajaran: 'Matematika', pertanyaan: 'Berapakah hasil dari 7² (tujuh kuadrat)?', opsi_a: '14', opsi_b: '21', opsi_c: '49', opsi_d: '56', bobot_nilai: 2 },
+      { id_soal: 'Q005', mata_pelajaran: 'Matematika', pertanyaan: 'Jika 2x + 6 = 18, maka nilai x adalah ...', opsi_a: '4', opsi_b: '5', opsi_c: '6', opsi_d: '7', bobot_nilai: 2 },
+      { id_soal: 'Q006', mata_pelajaran: 'Matematika', pertanyaan: 'Hasil dari 15 + 27 - 12 adalah ...', opsi_a: '28', opsi_b: '30', opsi_c: '32', opsi_d: '34', bobot_nilai: 2 },
+      { id_soal: 'Q007', mata_pelajaran: 'Matematika', pertanyaan: 'Berapa derajat jumlah sudut dalam segitiga?', opsi_a: '90°', opsi_b: '120°', opsi_c: '180°', opsi_d: '360°', bobot_nilai: 2 },
+      { id_soal: 'Q008', mata_pelajaran: 'Matematika', pertanyaan: 'Hasil dari 100 ÷ 4 adalah ...', opsi_a: '20', opsi_b: '25', opsi_c: '30', opsi_d: '40', bobot_nilai: 2 },
+      { id_soal: 'Q009', mata_pelajaran: 'Matematika', pertanyaan: 'Bilangan prima antara 1 dan 10 berjumlah ...', opsi_a: '3', opsi_b: '4', opsi_c: '5', opsi_d: '6', bobot_nilai: 2 },
+      { id_soal: 'Q010', mata_pelajaran: 'Matematika', pertanyaan: 'Luas persegi dengan sisi 9 cm adalah ... cm²', opsi_a: '36', opsi_b: '63', opsi_c: '81', opsi_d: '90', bobot_nilai: 2 }
     ];
 
     /* ============================================================
        API HELPER
        ============================================================ */
     async function apiCall(action, payload) {
-      if (!CONFIG.WEB_APP_URL) {
-        return mockApi(action, payload);
-      }
+      if (!CONFIG.WEB_APP_URL) return mockApi(action, payload);
       try {
         const res = await fetch(CONFIG.WEB_APP_URL, {
           method: 'POST',
@@ -687,21 +745,17 @@
     }
 
     function mockApi(action, p) {
-      // Mode demo - simulasi respons server
       if (action === 'loginSiswa') {
-        return {
-          success: true,
-          sessionToken: 'demo-' + Date.now(),
-          user: {
-            username: p.username,
-            nama: 'Demo Siswa (' + p.username + ')',
-            kelas: p.kelas || 'XII-IPA-1',
-            ruangan: 'Ruang A-101',
-            sesi: 'Sesi 1',
-            proctor_username: 'proctor01',
-            role: 'siswa'
-          }
-        };
+        // Find siswa in demo DB
+        const found = DEMO_SISWA_DB.find(s => s.username === p.username && s.password === p.password);
+        if (!found) return { success: false, error: 'Username atau password salah. (Demo: siswa001/siswa123)' };
+        return { success: true, siswa: found };
+      }
+      if (action === 'validasiToken') {
+        const found = DEMO_SISWA_DB.find(s => s.username === p.username);
+        if (!found) return { success: false, error: 'Siswa tidak ditemukan' };
+        if (found.token_ujian !== p.token) return { success: false, error: 'Token ujian tidak valid' };
+        return { success: true, siswa: found };
       }
       if (action === 'getSoalBySesi') return { success: true, soal: DEMO_QUESTIONS, jumlah: DEMO_QUESTIONS.length };
       if (action === 'submitJawaban') {
@@ -711,7 +765,6 @@
       }
       if (action === 'kirimKuesioner') return { success: true };
       if (action === 'laporPelanggaran') return { success: true };
-      if (action === 'getBroadcastForSiswa') return { success: true, pesan: [] };
       return { success: false, error: 'Unknown action' };
     }
 
@@ -730,169 +783,165 @@
     function togglePwd(id, btn) {
       const input = document.getElementById(id);
       input.type = input.type === 'password' ? 'text' : 'password';
-    }
-
-    function showScreen(id) {
-      ['screen-welcome', 'screen-confirm', 'screen-exam', 'screen-survey', 'screen-thanks'].forEach(s => {
-        document.getElementById(s).classList.add('hidden');
-      });
-      document.getElementById(id).classList.remove('hidden');
+      const icon = btn.querySelector('.eye-icon');
+      if (input.type === 'password') {
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+      } else {
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>';
+      }
     }
 
     function showAppInfo() { document.getElementById('modal-info').classList.remove('hidden'); }
     function closeAppInfo() { document.getElementById('modal-info').classList.add('hidden'); }
 
+    function showLayer(num) {
+      // Hide all layers
+      ['layer-welcome', 'layer-login', 'layer-confirm', 'layer-exam', 'layer-result'].forEach(id => {
+        document.getElementById(id).classList.remove('active');
+      });
+      const map = { 1: 'layer-welcome', 2: 'layer-login', 3: 'layer-confirm', 4: 'layer-exam', 5: 'layer-result' };
+      document.getElementById(map[num]).classList.add('active');
+      state.currentLayer = num;
+      // Reset sub-views on layer 5
+      if (num === 5) {
+        document.getElementById('result-thanks').classList.remove('hidden');
+        document.getElementById('result-kuesioner').classList.add('hidden');
+        document.getElementById('result-final').classList.add('hidden');
+      }
+      // Toggle anti-cheat
+      setAntiCheat(num === 4);
+      // Persist state
+      saveSession({
+        currentLayer: num,
+        user: state.user,
+        siswa: state.siswa,
+        examStarted: state.examStarted,
+        examEndTime: state.examEndTime,
+        answers: state.answers,
+        isLocked: state.isLocked
+      });
+      window.scrollTo(0, 0);
+    }
+
     /* ============================================================
-       LOGIN HANDLER
+       LAYER NAVIGATION
+       ============================================================ */
+
+    // Layer 1 → 2: trigger fullscreen + go to login
+    async function goToLayer2() {
+      // Request fullscreen
+      try {
+        const el = document.documentElement;
+        if (el.requestFullscreen) await el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+        else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+      } catch (e) {
+        console.warn('Fullscreen request failed (user may need to allow):', e);
+        showToast('Mode fullscreen gagal aktif. Anda bisa lanjut, namun proteksi ujian mungkin berkurang.', 'warning');
+      }
+      showLayer(2);
+    }
+
+    function backToLayer1() {
+      // Exit fullscreen if active
+      if (document.fullscreenElement) {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+      }
+      showLayer(1);
+    }
+
+    function backToLayer2() {
+      showLayer(2);
+    }
+
+    /* ============================================================
+       LAYER 2: LOGIN
        ============================================================ */
     document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const kelas = document.getElementById('login-kelas').value;
       const username = document.getElementById('login-username').value.trim();
       const password = document.getElementById('login-password').value;
-      const token = document.getElementById('login-token').value.trim().toUpperCase();
 
-      if (!kelas || !username || !password || !token) {
-        showToast('Mohon lengkapi semua field.', 'error');
+      if (!username || !password) {
+        showToast('Mohon isi username dan password.', 'error');
         return;
       }
 
-      const res = await apiCall('loginSiswa', { username, password, token_ujian: token, kelas });
+      const res = await apiCall('loginSiswa', { username, password });
       if (!res.success) {
         showToast(res.error || 'Login gagal', 'error');
         return;
       }
 
-      state.user = res.user;
-      saveSession({ user: res.user, loginAt: Date.now() });
-      // Fill confirm screen
-      document.getElementById('cf-nama').textContent = res.user.nama;
-      document.getElementById('cf-username').textContent = res.user.username;
-      document.getElementById('cf-kelas').textContent = res.user.kelas;
-      document.getElementById('cf-ruangan').textContent = res.user.ruangan;
-      document.getElementById('cf-sesi').textContent = res.user.sesi;
-      document.getElementById('cf-proctor').textContent = res.user.proctor_username;
-      showScreen('screen-confirm');
+      state.user = { username };
+      state.siswa = res.siswa;
+      saveSession({ currentLayer: 3, user: state.user, siswa: state.siswa });
+
+      // Fill confirmation data
+      document.getElementById('cf-nama').textContent = res.siswa.nama_lengkap;
+      document.getElementById('cf-username').textContent = res.siswa.username;
+      document.getElementById('cf-kelas').textContent = res.siswa.kelas;
+      document.getElementById('cf-ruangan').textContent = res.siswa.ruangan;
+      document.getElementById('cf-sesi').textContent = res.siswa.sesi;
+      document.getElementById('cf-mapel').textContent = res.siswa.mata_pelajaran || '-';
+      document.getElementById('cf-proctor').textContent = res.siswa.proctor_username || '-';
+
+      showLayer(3);
+      showToast('Login berhasil. Silakan konfirmasi data & masukkan token.', 'success');
     });
 
-    function cancelLogin() {
-      clearSession();
-      state.user = null;
-      showScreen('screen-welcome');
-    }
-
     /* ============================================================
-       START EXAM (with Fullscreen)
+       LAYER 3 → 4: VALIDATE TOKEN + START EXAM
        ============================================================ */
-    async function startExamFullscreen() {
-      // Request fullscreen
-      const el = document.documentElement;
-      try {
-        if (el.requestFullscreen) await el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-        else if (el.msRequestFullscreen) await el.msRequestFullscreen();
-      } catch (e) { console.warn('Fullscreen request failed:', e); }
+    async function startExam() {
+      const token = document.getElementById('exam-token').value.trim().toUpperCase();
+      if (!token) { showToast('Mohon masukkan token ujian.', 'error'); return; }
 
-      // Load questions
-      const res = await apiCall('getSoalBySesi', { sesi: state.user.sesi });
-      if (!res.success) { showToast('Gagal memuat soal: ' + res.error, 'error'); return; }
+      // Validate token
+      const res = await apiCall('validasiToken', { username: state.siswa.username, token });
+      if (!res.success) {
+        showToast(res.error || 'Token tidak valid', 'error');
+        return;
+      }
 
-      state.questions = res.soal || [];
-      state.currentQuestion = 0;
-      state.answers = {};
       state.examStarted = true;
-      // Set timer (90 minutes default)
-      const durasiMenit = 90;
-      state.examEndTime = Date.now() + durasiMenit * 60 * 1000;
-      saveSession(Object.assign(loadSession() || {}, {
-        examStarted: true,
-        examEndTime: state.examEndTime,
-        answers: state.answers
-      }));
+      state.examEndTime = Date.now() + 90 * 60 * 1000; // 90 minutes
 
-      renderQuestion();
-      renderNav();
+      // Determine exam mode
+      const useExternal = !!CONFIG.SOAL_URL;
+      if (useExternal) {
+        // MODE 1: External Google Form / URL
+        document.getElementById('exam-external').classList.remove('hidden');
+        document.getElementById('exam-native').classList.add('hidden');
+        const iframe = document.getElementById('exam-iframe');
+        iframe.src = CONFIG.SOAL_URL;
+        document.getElementById('exam-external-link').href = CONFIG.SOAL_URL;
+      } else {
+        // MODE 2: Built-in question bank
+        document.getElementById('exam-external').classList.add('hidden');
+        document.getElementById('exam-native').classList.remove('hidden');
+        const soalRes = await apiCall('getSoalBySesi', { sesi: state.siswa.sesi });
+        if (soalRes.success) {
+          state.questions = soalRes.soal || [];
+          state.currentQuestion = 0;
+          state.answers = {};
+          renderQuestion();
+          renderNav();
+        }
+      }
+
+      // Setup exam info
+      document.getElementById('exam-user-info').textContent =
+        `${state.siswa.nama_lengkap} • ${state.siswa.kelas} • ${state.siswa.sesi}`;
+
       startTimer();
-      startBroadcastPolling();
-
-      showScreen('screen-exam');
+      showLayer(4);
       showToast('Ujian dimulai. Semoga sukses!', 'success');
     }
 
     /* ============================================================
-       QUESTION RENDERING
-       ============================================================ */
-    function renderQuestion() {
-      const q = state.questions[state.currentQuestion];
-      if (!q) return;
-      document.getElementById('q-number').textContent = state.currentQuestion + 1;
-      document.getElementById('q-mapel').textContent = q.mata_pelajaran || '—';
-      document.getElementById('q-text').textContent = q.pertanyaan;
-
-      const optsContainer = document.getElementById('q-options');
-      optsContainer.innerHTML = '';
-      const opts = [
-        { letter: 'A', text: q.opsi_a },
-        { letter: 'B', text: q.opsi_b },
-        { letter: 'C', text: q.opsi_c },
-        { letter: 'D', text: q.opsi_d }
-      ];
-      if (q.opsi_e) opts.push({ letter: 'E', text: q.opsi_e });
-
-      opts.forEach(opt => {
-        if (!opt.text) return;
-        const div = document.createElement('div');
-        div.className = 'opt rounded-xl p-4 flex items-center gap-3';
-        if (state.answers[q.id_soal] === opt.letter) div.classList.add('selected');
-        div.innerHTML = `
-          <div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center font-bold text-slate-600 flex-shrink-0">${opt.letter}</div>
-          <div class="flex-1 text-slate-800">${opt.text}</div>
-        `;
-        div.addEventListener('click', () => {
-          state.answers[q.id_soal] = opt.letter;
-          saveSession(Object.assign(loadSession() || {}, { answers: state.answers }));
-          renderQuestion();
-          renderNav();
-        });
-        optsContainer.appendChild(div);
-      });
-
-      // Nav buttons
-      document.getElementById('btn-prev').disabled = state.currentQuestion === 0;
-      document.getElementById('btn-next').textContent = state.currentQuestion === state.questions.length - 1 ? 'Selesai →' : 'Berikutnya →';
-    }
-
-    function renderNav() {
-      const nav = document.getElementById('q-nav');
-      nav.innerHTML = '';
-      state.questions.forEach((q, i) => {
-        const btn = document.createElement('button');
-        const isAnswered = !!state.answers[q.id_soal];
-        const isCurrent = i === state.currentQuestion;
-        btn.className = `aspect-square rounded-lg text-sm font-bold transition-all ${
-          isCurrent ? 'bg-blue-500 text-white' :
-          isAnswered ? 'bg-lime-400 text-slate-900' :
-          'bg-white border-2 border-slate-200 text-slate-600'
-        }`;
-        btn.textContent = i + 1;
-        btn.addEventListener('click', () => { state.currentQuestion = i; renderQuestion(); renderNav(); });
-        nav.appendChild(btn);
-      });
-    }
-
-    function prevQuestion() {
-      if (state.currentQuestion > 0) { state.currentQuestion--; renderQuestion(); renderNav(); }
-    }
-    function nextQuestion() {
-      if (state.currentQuestion < state.questions.length - 1) {
-        state.currentQuestion++; renderQuestion(); renderNav();
-      } else {
-        submitExam();
-      }
-    }
-
-    /* ============================================================
-       TIMER
+       TIMER (Layer 4)
        ============================================================ */
     function startTimer() {
       if (state.timerInterval) clearInterval(state.timerInterval);
@@ -903,151 +952,229 @@
         const s = Math.floor((remaining % 60000) / 1000);
         const el = document.getElementById('exam-timer');
         if (el) el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-
-        // Persist remaining time
         saveSession(Object.assign(loadSession() || {}, { examEndTime: state.examEndTime }));
-
         if (remaining <= 0) {
           clearInterval(state.timerInterval);
           showToast('Waktu ujian habis! Jawaban otomatis dikumpulkan.', 'warning');
-          submitExam(true);
+          finishExam(true);
         }
       }, 1000);
     }
 
     /* ============================================================
-       SUBMIT EXAM
+       QUESTION RENDERING (Layer 4 - native mode)
        ============================================================ */
-    async function submitExam(autoSubmit = false) {
+    function renderQuestion() {
+      const q = state.questions[state.currentQuestion];
+      if (!q) return;
+      document.getElementById('q-number').textContent = state.currentQuestion + 1;
+      document.getElementById('q-mapel').textContent = q.mata_pelajaran || '—';
+      document.getElementById('q-text').textContent = q.pertanyaan;
+
+      const c = document.getElementById('q-options');
+      c.innerHTML = '';
+      const opts = [
+        { l: 'A', t: q.opsi_a }, { l: 'B', t: q.opsi_b },
+        { l: 'C', t: q.opsi_c }, { l: 'D', t: q.opsi_d }
+      ];
+      opts.forEach(o => {
+        if (!o.t) return;
+        const d = document.createElement('div');
+        d.className = 'opt rounded-xl p-4 flex items-center gap-3 cursor-pointer transition border-2 border-slate-200 hover:border-slate-300 hover:bg-slate-50';
+        if (state.answers[q.id_soal] === o.l) {
+          d.classList.add('border-lime-500', 'bg-lime-50');
+          d.classList.remove('border-slate-200');
+        }
+        d.innerHTML = `<div class="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center font-bold text-slate-600 flex-shrink-0">${o.l}</div><div class="flex-1 text-slate-800">${o.t}</div>`;
+        d.addEventListener('click', () => {
+          state.answers[q.id_soal] = o.l;
+          saveSession(Object.assign(loadSession() || {}, { answers: state.answers }));
+          renderQuestion();
+          renderNav();
+        });
+        c.appendChild(d);
+      });
+
+      document.getElementById('btn-prev').disabled = state.currentQuestion === 0;
+      document.getElementById('btn-next').textContent = state.currentQuestion === state.questions.length - 1 ? 'Selesai →' : 'Berikutnya →';
+    }
+
+    function renderNav() {
+      const n = document.getElementById('q-nav');
+      n.innerHTML = '';
+      state.questions.forEach((q, i) => {
+        const b = document.createElement('button');
+        const ans = !!state.answers[q.id_soal];
+        const cur = i === state.currentQuestion;
+        b.className = `qnav-btn aspect-square rounded-lg text-sm font-bold ${cur ? 'bg-blue-500 text-white' : ans ? 'bg-lime-400 text-slate-900' : 'bg-white border-2 border-slate-200 text-slate-600'}`;
+        b.textContent = i + 1;
+        b.addEventListener('click', () => { state.currentQuestion = i; renderQuestion(); renderNav(); });
+        n.appendChild(b);
+      });
+    }
+
+    function prevQuestion() {
+      if (state.currentQuestion > 0) { state.currentQuestion--; renderQuestion(); renderNav(); }
+    }
+    function nextQuestion() {
+      if (state.currentQuestion < state.questions.length - 1) { state.currentQuestion++; renderQuestion(); renderNav(); }
+      else finishExam();
+    }
+
+    /* ============================================================
+       FINISH EXAM (Layer 4 → 5)
+       ============================================================ */
+    async function finishExam(autoSubmit = false) {
       if (!autoSubmit) {
         if (!confirm('Anda yakin ingin mengumpulkan jawaban? Tindakan ini tidak dapat dibatalkan.')) return;
       }
       if (state.timerInterval) clearInterval(state.timerInterval);
-      if (state.broadcastInterval) clearInterval(state.broadcastInterval);
+      // Stop anti-cheat
+      setAntiCheat(false);
 
-      const res = await apiCall('submitJawaban', {
-        username: state.user.username,
-        sesi: state.user.sesi,
-        jawaban: state.answers,
-        waktu_selesai: new Date().toISOString().replace('T', ' ').slice(0, 19)
-      });
+      // Submit answers (only for native mode)
+      if (!CONFIG.SOAL_URL && Object.keys(state.answers).length > 0) {
+        await apiCall('submitJawaban', {
+          username: state.siswa.username,
+          sesi: state.siswa.sesi,
+          jawaban: state.answers,
+          waktu_selesai: new Date().toISOString().replace('T', ' ').slice(0, 19)
+        });
+      }
 
-      // Show survey
-      document.getElementById('tk-nama').textContent = state.user.nama;
-      document.getElementById('tk-sesi').textContent = state.user.sesi;
-      document.getElementById('tk-waktu').textContent = new Date().toLocaleString('id-ID');
-      showScreen('screen-survey');
+      // Fill result screen
+      document.getElementById('rs-nama').textContent = state.siswa.nama_lengkap;
+      document.getElementById('rs-sesi').textContent = state.siswa.sesi;
+      document.getElementById('rs-waktu').textContent = new Date().toLocaleString('id-ID');
+
+      showLayer(5);
       showToast('Jawaban berhasil dikumpulkan!', 'success');
     }
 
     /* ============================================================
-       KUESIONER
+       LAYER 5: KUESIONER
        ============================================================ */
-    let surveyRatings = { kemudahan_aplikasi: 0, kemudahan_soal: 0, kejelasan_soal: 0 };
-    document.querySelectorAll('.rating-btn').forEach(btn => {
+    function showKuesioner() {
+      document.getElementById('result-thanks').classList.add('hidden');
+      document.getElementById('result-kuesioner').classList.remove('hidden');
+    }
+
+    document.querySelectorAll('.rating-card').forEach(btn => {
       btn.addEventListener('click', () => {
         const q = btn.parentElement.dataset.q;
         const v = parseInt(btn.dataset.v);
-        surveyRatings[q] = v;
-        btn.parentElement.querySelectorAll('.rating-btn').forEach(b => {
-          b.classList.remove('bg-lime-400', 'border-lime-500', 'text-slate-900');
+        state.surveyRatings[q] = v;
+        btn.parentElement.querySelectorAll('.rating-card').forEach(b => {
+          b.classList.remove('border-amber-400', 'bg-amber-50');
           b.classList.add('border-slate-200');
         });
-        btn.classList.add('bg-lime-400', 'border-lime-500', 'text-slate-900');
+        btn.classList.add('border-amber-400', 'bg-amber-50');
         btn.classList.remove('border-slate-200');
       });
     });
 
     document.getElementById('survey-form').addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (!surveyRatings.kemudahan_aplikasi || !surveyRatings.kemudahan_soal || !surveyRatings.kejelasan_soal) {
-        showToast('Mohon beri penilaian untuk semua kategori.', 'error');
+      if (!state.surveyRatings.kemudahan_aplikasi || !state.surveyRatings.kemudahan_soal) {
+        showToast('Mohon beri penilaian untuk kemudahan aplikasi & soal.', 'error');
         return;
       }
       await apiCall('kirimKuesioner', {
-        username: state.user.username,
-        nama_lengkap: state.user.nama,
-        kelas: state.user.kelas,
-        sesi: state.user.sesi,
-        kemudahan_aplikasi: surveyRatings.kemudahan_aplikasi,
-        kemudahan_soal: surveyRatings.kemudahan_soal,
-        kejelasan_soal: surveyRatings.kejelasan_soal,
-        kepuasan_umum: surveyRatings.kemudahan_aplikasi,
-        kritik_saran: document.getElementById('survey-kritik').value
+        username: state.siswa.username,
+        nama_lengkap: state.siswa.nama_lengkap,
+        kelas: state.siswa.kelas,
+        sesi: state.siswa.sesi,
+        kemudahan_aplikasi: state.surveyRatings.kemudahan_aplikasi,
+        kemudahan_soal: state.surveyRatings.kemudahan_soal,
+        saran: document.getElementById('survey-saran').value
       });
-      showScreen('screen-thanks');
+      showToast('Terima kasih atas kuesioner Anda!', 'success');
+      showFinalThanks();
     });
 
+    function skipKuesioner() {
+      showToast('Kuesioner dilewati.', 'info');
+      showFinalThanks();
+    }
+
+    function showFinalThanks() {
+      document.getElementById('result-kuesioner').classList.add('hidden');
+      document.getElementById('result-final').classList.remove('hidden');
+    }
+
     /* ============================================================
-       SAFE LOGOUT (exit fullscreen)
+       BACK TO LOGIN (Final exit)
        ============================================================ */
-    async function safeLogout() {
+    async function backToLogin() {
+      // Exit fullscreen
       if (document.fullscreenElement) {
         if (document.exitFullscreen) await document.exitFullscreen();
         else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
       }
+      // Clear state
+      state.user = null;
+      state.siswa = null;
+      state.examStarted = false;
+      state.examEndTime = null;
+      state.currentQuestion = 0;
+      state.questions = [];
+      state.answers = {};
+      state.isLocked = false;
+      state.surveyRatings = { kemudahan_aplikasi: 0, kemudahan_soal: 0 };
       clearSession();
-      state = { user: null, examStarted: false, examEndTime: null, currentQuestion: 0, questions: [], answers: {}, isLocked: false, lastBroadcastCheck: null, timerInterval: null, broadcastInterval: null };
-      showScreen('screen-welcome');
+      // Reset form
+      document.getElementById('login-form').reset();
+      document.getElementById('exam-token').value = '';
+      document.getElementById('survey-saran').value = '';
+      showLayer(2);
     }
 
     /* ============================================================
-       VIOLATION DETECTION & LOCK SCREEN
+       ANTI-CHEAT (ONLY active on Layer 4)
        ============================================================ */
-    function triggerLock(type, reason) {
-      if (state.isLocked || !state.examStarted) return;
-      state.isLocked = true;
-      saveSession(Object.assign(loadSession() || {}, { isLocked: true, lockType: type }));
-
-      // Report to server
-      apiCall('laporPelanggaran', {
-        username: state.user.username,
-        nama_lengkap: state.user.nama,
-        ruangan: state.user.ruangan,
-        proctor: state.user.proctor_username,
-        jenis: type,
-        deskripsi: reason
-      });
-
-      document.getElementById('violation-type').textContent = type.replace(/_/g, ' ').toUpperCase();
-      document.getElementById('violation-reason').textContent = reason;
-      document.getElementById('lock-time').textContent = new Date().toLocaleString('id-ID');
-      document.getElementById('screen-lock').classList.remove('hidden');
+    function setAntiCheat(active) {
+      state.antiCheatActive = active;
     }
 
-    // Detect visibility change (tab switch / minimize)
+    // Disable right click — only when in exam layer
+    document.addEventListener('contextmenu', (e) => {
+      if (state.antiCheatActive) {
+        e.preventDefault();
+        showToast('Klik kanan dinonaktifkan selama ujian.', 'warning');
+      }
+    });
+
+    // Detect visibility change (tab switch / minimize) — only in exam
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden && state.examStarted && !state.isLocked) {
+      if (!state.antiCheatActive) return;
+      if (document.hidden) {
         triggerLock('buka_tab_baru', 'Siswa berpindah ke tab/jendela lain saat ujian berlangsung.');
       }
     });
 
-    // Detect fullscreen exit
+    // Detect fullscreen exit — only in exam
     document.addEventListener('fullscreenchange', () => {
-      if (!document.fullscreenElement && state.examStarted && !state.isLocked) {
+      if (!state.antiCheatActive) return;
+      if (!document.fullscreenElement) {
         triggerLock('keluar_fullscreen', 'Siswa keluar dari mode fullscreen saat ujian berlangsung.');
       }
     });
     document.addEventListener('webkitfullscreenchange', () => {
-      if (!document.webkitFullscreenElement && state.examStarted && !state.isLocked) {
+      if (!state.antiCheatActive) return;
+      if (!document.webkitFullscreenElement) {
         triggerLock('keluar_fullscreen', 'Siswa keluar dari mode fullscreen saat ujian berlangsung.');
       }
     });
 
-    // Disable right click
-    document.addEventListener('contextmenu', (e) => {
-      if (state.examStarted) { e.preventDefault(); showToast('Klik kanan dinonaktifkan selama ujian.', 'warning'); }
-    });
-
-    // Disable suspicious shortcuts
+    // Disable suspicious shortcuts — only in exam
     document.addEventListener('keydown', (e) => {
-      if (!state.examStarted) return;
+      if (!state.antiCheatActive) return;
       const blocked = [
-        e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase()), // DevTools
-        e.ctrlKey && ['U','S','C'].includes(e.key.toUpperCase()), // View source, save, copy
+        e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase()),
+        e.ctrlKey && ['U','S','C'].includes(e.key.toUpperCase()),
         e.key === 'F12',
-        e.ctrlKey && e.key === 'P', // Print
-        (e.altKey && e.key === 'Tab') // Alt+Tab (limited support)
+        e.ctrlKey && e.key === 'P',
+        e.altKey && e.key === 'Tab'
       ];
       if (blocked.some(Boolean)) {
         e.preventDefault();
@@ -1055,100 +1182,75 @@
       }
     });
 
-    /* ============================================================
-       BROADCAST POLLING
-       ============================================================ */
-    function startBroadcastPolling() {
-      state.lastBroadcastCheck = new Date().toISOString();
-      if (state.broadcastInterval) clearInterval(state.broadcastInterval);
-      state.broadcastInterval = setInterval(checkBroadcast, 10000);
-      checkBroadcast();
-    }
-
-    async function checkBroadcast() {
-      if (!state.user || state.isLocked) return;
-      const res = await apiCall('getBroadcastForSiswa', {
-        username: state.user.username,
-        ruangan: state.user.ruangan,
-        since: state.lastBroadcastCheck
+    function triggerLock(type, reason) {
+      if (state.isLocked || !state.examStarted) return;
+      state.isLocked = true;
+      saveSession(Object.assign(loadSession() || {}, { isLocked: true, lockType: type }));
+      apiCall('laporPelanggaran', {
+        username: state.siswa.username,
+        nama_lengkap: state.siswa.nama_lengkap,
+        ruangan: state.siswa.ruangan,
+        proctor: state.siswa.proctor_username,
+        jenis: type,
+        deskripsi: reason
       });
-      if (!res.success || !res.pesan || !res.pesan.length) return;
-      state.lastBroadcastCheck = new Date().toISOString();
-      res.pesan.forEach(p => {
-        showBroadcastPopup(p);
-        addToBroadcastList(p);
-      });
-    }
-
-    function showBroadcastPopup(p) {
-      document.getElementById('bc-tipe').textContent = (p.tipe_broadcast || 'pengumuman').toUpperCase();
-      document.getElementById('bc-pesan').textContent = p.isi_pesan;
-      document.getElementById('bc-time').textContent = 'Dari: ' + p.proctor_username + ' • ' + new Date(p.timestamp).toLocaleString('id-ID');
-      document.getElementById('modal-broadcast').classList.remove('hidden');
-    }
-    function closeBroadcast() {
-      document.getElementById('modal-broadcast').classList.add('hidden');
-    }
-    function addToBroadcastList(p) {
-      const list = document.getElementById('broadcast-list');
-      if (list.querySelector('p.text-slate-400')) list.innerHTML = '';
-      const div = document.createElement('div');
-      div.className = 'p-2 rounded-lg bg-blue-50 border-l-2 border-royal-blue';
-      div.innerHTML = `<div class="text-xs font-semibold text-royal-blue">${p.tipe_broadcast || 'pengumuman'}</div><div class="text-slate-700">${p.isi_pesan}</div>`;
-      list.prepend(div);
+      document.getElementById('violation-type').textContent = type.replace(/_/g, ' ').toUpperCase();
+      document.getElementById('violation-reason').textContent = reason;
+      document.getElementById('lock-time').textContent = new Date().toLocaleString('id-ID');
+      document.getElementById('lock-overlay').classList.remove('hidden');
     }
 
     /* ============================================================
-       SESSION RESTORATION (handle page refresh)
+       SESSION RESTORATION (page refresh)
        ============================================================ */
     function restoreSession() {
       const saved = loadSession();
-      if (!saved || !saved.user) return;
+      if (!saved || !saved.siswa) return;
 
       state.user = saved.user;
-      if (saved.examStarted && saved.examEndTime) {
-        state.examEndTime = saved.examEndTime;
-        const remaining = saved.examEndTime - Date.now();
-        if (remaining > 0) {
-          // Resume exam
-          state.examStarted = true;
-          state.answers = saved.answers || {};
-          state.isLocked = saved.isLocked || false;
+      state.siswa = saved.siswa;
 
-          // Re-load questions
-          apiCall('getSoalBySesi', { sesi: state.user.sesi }).then(res => {
+      // Re-fill confirmation data
+      document.getElementById('cf-nama').textContent = saved.siswa.nama_lengkap;
+      document.getElementById('cf-username').textContent = saved.siswa.username;
+      document.getElementById('cf-kelas').textContent = saved.siswa.kelas;
+      document.getElementById('cf-ruangan').textContent = saved.siswa.ruangan;
+      document.getElementById('cf-sesi').textContent = saved.siswa.sesi;
+      document.getElementById('cf-mapel').textContent = saved.siswa.mata_pelajaran || '-';
+      document.getElementById('cf-proctor').textContent = saved.siswa.proctor_username || '-';
+
+      if (saved.currentLayer === 4 && saved.examStarted) {
+        // Resume exam
+        state.examStarted = true;
+        state.examEndTime = saved.examEndTime;
+        state.answers = saved.answers || {};
+        state.isLocked = saved.isLocked || false;
+
+        if (CONFIG.SOAL_URL) {
+          document.getElementById('exam-external').classList.remove('hidden');
+          document.getElementById('exam-native').classList.add('hidden');
+          document.getElementById('exam-iframe').src = CONFIG.SOAL_URL;
+          document.getElementById('exam-external-link').href = CONFIG.SOAL_URL;
+        } else {
+          document.getElementById('exam-external').classList.add('hidden');
+          document.getElementById('exam-native').classList.remove('hidden');
+          apiCall('getSoalBySesi', { sesi: saved.siswa.sesi }).then(res => {
             if (res.success) {
               state.questions = res.soal || [];
+              state.currentQuestion = 0;
               renderQuestion();
               renderNav();
-              startTimer();
-              startBroadcastPolling();
-              showScreen('screen-exam');
-              if (state.isLocked) {
-                document.getElementById('screen-lock').classList.remove('hidden');
-              }
-              showToast('Sesi ujian dipulihkan. Silakan lanjutkan.', 'info');
-            } else {
-              showToast('Gagal memulihkan soal, silakan login ulang.', 'error');
-              clearSession();
-              showScreen('screen-welcome');
             }
           });
-        } else {
-          // Time expired during refresh
-          showToast('Waktu ujian telah berakhir saat halaman di-refresh. Jawaban akan dikumpulkan.', 'warning');
-          state.examStarted = true;
-          submitExam(true);
         }
+        document.getElementById('exam-user-info').textContent =
+          `${saved.siswa.nama_lengkap} • ${saved.siswa.kelas} • ${saved.siswa.sesi}`;
+        startTimer();
+        showLayer(4);
+        if (state.isLocked) document.getElementById('lock-overlay').classList.remove('hidden');
+        showToast('Sesi ujian dipulihkan. Silakan lanjutkan.', 'info');
       } else {
-        // Just logged in, show confirm
-        document.getElementById('cf-nama').textContent = saved.user.nama;
-        document.getElementById('cf-username').textContent = saved.user.username;
-        document.getElementById('cf-kelas').textContent = saved.user.kelas;
-        document.getElementById('cf-ruangan').textContent = saved.user.ruangan;
-        document.getElementById('cf-sesi').textContent = saved.user.sesi;
-        document.getElementById('cf-proctor').textContent = saved.user.proctor_username;
-        showScreen('screen-confirm');
+        showLayer(saved.currentLayer || 3);
       }
     }
 
