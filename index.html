@@ -207,7 +207,13 @@
           </svg>
           Mulai
         </button>
-        <p class="text-blue-300 text-xs mt-3">Klik "Mulai" untuk masuk mode fullscreen & melanjutkan ke halaman login</p>
+        <p class="text-blue-300 text-xs mt-3">Klik "Mulai" untuk masuk mode fullscreen &amp; melanjutkan ke halaman login</p>
+
+        <!-- Fallback: jika fullscreen tidak aktif, tombol ini akan muncul -->
+        <button onclick="requestFullscreenAsync()" id="btn-manual-fullscreen"
+                class="hidden mt-2 text-xs text-lime-300 hover:text-lime-200 underline">
+          ⛶ Aktifkan Fullscreen Manual
+        </button>
 
         <!-- Features preview -->
         <div class="grid grid-cols-3 gap-4 mt-12 max-w-md">
@@ -297,7 +303,7 @@
   </section>
 
   <!-- ============================================================
-       LAYER 3: KONFIRMASI DATA + INPUT TOKEN
+       LAYER 3: KONFIRMASI DATA SISWA (tanpa token, token di layer 4)
        ============================================================ -->
   <section id="layer-confirm" class="layer min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 items-center justify-center p-6">
     <div class="w-full max-w-lg">
@@ -310,7 +316,7 @@
             </svg>
           </div>
           <h2 class="text-2xl font-extrabold text-slate-900">Konfirmasi Data Peserta</h2>
-          <p class="text-slate-500 mt-1 text-sm">Pastikan data berikut benar. Masukkan token ujian dari pengawas untuk memulai.</p>
+          <p class="text-slate-500 mt-1 text-sm">Pastikan data berikut benar sebelum melanjutkan ke input token ujian.</p>
         </div>
 
         <!-- Data siswa dari DB -->
@@ -324,12 +330,50 @@
           <div class="flex justify-between"><span class="text-slate-500 text-sm">Pengawas</span><span id="cf-proctor" class="font-semibold text-slate-900"></span></div>
         </div>
 
-        <!-- Token input -->
+        <div class="flex gap-3">
+          <button onclick="backToLayer2()" class="flex-1 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition">← Batal</button>
+          <button onclick="goToLayer4()" class="flex-1 btn-neon py-3 rounded-xl">Lanjut ke Token →</button>
+        </div>
+      </div>
+
+      <div class="mt-6 text-center">
+        <button onclick="showAppInfo()" class="text-xs text-slate-400 hover:text-royal-blue transition">
+          ZCBT Integrated System • v1.0 | Developed by MB
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LAYER 4: INPUT TOKEN UJIAN (dedicated layer)
+       ============================================================ -->
+  <section id="layer-token" class="layer min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 items-center justify-center p-6">
+    <div class="w-full max-w-md">
+
+      <div class="card p-8 fade-in">
+        <div class="text-center mb-6">
+          <div class="inline-flex w-16 h-16 items-center justify-center rounded-full bg-lime-100 mb-4">
+            <svg class="w-8 h-8 text-lime-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+            </svg>
+          </div>
+          <h2 class="text-2xl font-extrabold text-slate-900">Input Token Ujian</h2>
+          <p class="text-slate-500 mt-1 text-sm">Masukkan token yang diberikan oleh pengawas ruangan Anda.</p>
+        </div>
+
+        <!-- Siswa info compact -->
+        <div class="bg-blue-50 rounded-xl p-4 mb-5 text-center">
+          <div class="text-xs text-slate-500 uppercase tracking-wide mb-1">Peserta</div>
+          <div id="tk-nama" class="font-bold text-slate-900"></div>
+          <div id="tk-kelas-ruangan" class="text-xs text-slate-600 mt-1"></div>
+        </div>
+
+        <!-- Token input besar & jelas -->
         <div class="mb-5">
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Token Ujian (dari Proctor)</label>
-          <input id="exam-token" type="text" required placeholder="TKN-XXXX-2025"
-            class="input-field w-full px-4 py-3 rounded-xl font-mono uppercase tracking-wider text-center text-lg" />
-          <p class="text-xs text-slate-400 mt-1">Token diberikan oleh pengawas ruangan saat ujian dimulai.</p>
+          <label class="block text-sm font-semibold text-slate-700 mb-2 text-center">Token Ujian</label>
+          <input id="exam-token" type="text" required placeholder="TKN-XXXX-2025" autocomplete="off"
+            class="input-field w-full px-4 py-4 rounded-xl font-mono uppercase tracking-widest text-center text-2xl font-bold" />
+          <p class="text-xs text-slate-400 mt-2 text-center">Token diberikan oleh pengawas ruangan saat ujian dimulai.</p>
         </div>
 
         <!-- Warning -->
@@ -351,7 +395,7 @@
         </div>
 
         <div class="flex gap-3">
-          <button onclick="backToLayer2()" class="flex-1 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition">Batal</button>
+          <button onclick="backToLayer3()" class="flex-1 py-3 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 transition">← Kembali</button>
           <button onclick="startExam()" class="flex-1 btn-neon py-3 rounded-xl">Kerjakan Ujian →</button>
         </div>
       </div>
@@ -365,7 +409,7 @@
   </section>
 
   <!-- ============================================================
-       LAYER 4: HALAMAN SOAL (with anti-cheat)
+       LAYER 5: HALAMAN SOAL (with anti-cheat)
        Support: embedded Google Form URL OR built-in question bank
        ============================================================ -->
   <section id="layer-exam" class="layer min-h-screen bg-slate-100 flex-col">
@@ -472,7 +516,7 @@
   </section>
 
   <!-- ============================================================
-       LAYER 5: HASIL SUBMIT + KUESIONER + FINAL THANKS
+       LAYER 6: HASIL SUBMIT + KUESIONER + FINAL THANKS
        ============================================================ -->
   <section id="layer-result" class="layer royal-bg min-h-screen text-white relative">
     <div class="relative z-10 w-full min-h-screen flex items-center justify-center p-6">
@@ -794,21 +838,30 @@
     function closeAppInfo() { document.getElementById('modal-info').classList.add('hidden'); }
 
     function showLayer(num) {
-      // Hide all layers
-      ['layer-welcome', 'layer-login', 'layer-confirm', 'layer-exam', 'layer-result'].forEach(id => {
-        document.getElementById(id).classList.remove('active');
+      // Hide all layers (now 6 layers total)
+      ['layer-welcome', 'layer-login', 'layer-confirm', 'layer-token', 'layer-exam', 'layer-result'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
       });
-      const map = { 1: 'layer-welcome', 2: 'layer-login', 3: 'layer-confirm', 4: 'layer-exam', 5: 'layer-result' };
-      document.getElementById(map[num]).classList.add('active');
+      const map = {
+        1: 'layer-welcome',
+        2: 'layer-login',
+        3: 'layer-confirm',
+        4: 'layer-token',      // ← NEW: dedicated token input layer
+        5: 'layer-exam',
+        6: 'layer-result'
+      };
+      const target = document.getElementById(map[num]);
+      if (target) target.classList.add('active');
       state.currentLayer = num;
-      // Reset sub-views on layer 5
-      if (num === 5) {
+      // Reset sub-views on layer 6 (result)
+      if (num === 6) {
         document.getElementById('result-thanks').classList.remove('hidden');
         document.getElementById('result-kuesioner').classList.add('hidden');
         document.getElementById('result-final').classList.add('hidden');
       }
-      // Toggle anti-cheat
-      setAntiCheat(num === 4);
+      // Toggle anti-cheat — ONLY active on layer 5 (exam)
+      setAntiCheat(num === 5);
       // Persist state
       saveSession({
         currentLayer: num,
@@ -823,22 +876,66 @@
     }
 
     /* ============================================================
-       LAYER NAVIGATION
+       LAYER NAVIGATION — 6 LAYERS
+       1: Welcome  → 2: Login  → 3: Konfirmasi Data  → 4: Input Token  → 5: Soal  → 6: Result+Kuesioner
+       ============================================================ */
+
+    // Layer 3 → 4: pindah ke input token (setelah konfirmasi data)
+    function goToLayer4() {
+      // Tampilkan info siswa di layer token
+      if (state.siswa) {
+        document.getElementById('tk-nama').textContent = state.siswa.nama_lengkap;
+        document.getElementById('tk-kelas-ruangan').textContent =
+          state.siswa.kelas + ' • ' + state.siswa.ruangan + ' • ' + state.siswa.sesi;
+      }
+      showLayer(4);
+    }
+
+    // Layer 4 → 3: kembali ke konfirmasi data
+    function backToLayer3() {
+      showLayer(3);
+    }
+
+    /* ============================================================
+       LAYER NAVIGATION — Main entries (Mulai, Back)
        ============================================================ */
 
     // Layer 1 → 2: trigger fullscreen + go to login
-    async function goToLayer2() {
-      // Request fullscreen
+    // PENTING: Layer switch DULU, fullscreen async (tidak boleh block)
+    // Karena di GitHub Pages (HTTPS) atau iOS Safari, fullscreen sering reject
+    // dan akan membuat tombol "Mulai" terlihat tidak berfungsi.
+    function goToLayer2() {
+      // 1. Switch layer SEGERA (jangan tunggu fullscreen)
+      showLayer(2);
+
+      // 2. Coba fullscreen secara async (non-blocking)
+      requestFullscreenAsync();
+    }
+
+    // Helper: request fullscreen tanpa blocking, dengan fallback friendly
+    function requestFullscreenAsync() {
       try {
         const el = document.documentElement;
-        if (el.requestFullscreen) await el.requestFullscreen();
-        else if (el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-        else if (el.msRequestFullscreen) await el.msRequestFullscreen();
+        let p = null;
+        if (el.requestFullscreen) p = el.requestFullscreen();
+        else if (el.webkitRequestFullscreen) p = el.webkitRequestFullscreen();
+        else if (el.msRequestFullscreen) p = el.msRequestFullscreen();
+        else if (el.webkitEnterFullscreen) p = el.webkitEnterFullscreen(); // iOS Safari (some)
+
+        if (p && typeof p.catch === 'function') {
+          p.catch(err => {
+            console.warn('Fullscreen gagal (opsional, tidak wajib):', err);
+            // Tampilkan tombol manual sebagai fallback
+            const btn = document.getElementById('btn-manual-fullscreen');
+            if (btn) btn.classList.remove('hidden');
+            showToast('Fullscreen tidak aktif — klik "Aktifkan Fullscreen Manual" jika diperlukan.', 'info');
+          });
+        }
       } catch (e) {
-        console.warn('Fullscreen request failed (user may need to allow):', e);
-        showToast('Mode fullscreen gagal aktif. Anda bisa lanjut, namun proteksi ujian mungkin berkurang.', 'warning');
+        console.warn('Fullscreen exception (diabaikan):', e);
+        const btn = document.getElementById('btn-manual-fullscreen');
+        if (btn) btn.classList.remove('hidden');
       }
-      showLayer(2);
     }
 
     function backToLayer1() {
@@ -935,12 +1032,12 @@
         `${state.siswa.nama_lengkap} • ${state.siswa.kelas} • ${state.siswa.sesi}`;
 
       startTimer();
-      showLayer(4);
+      showLayer(5);
       showToast('Ujian dimulai. Semoga sukses!', 'success');
     }
 
     /* ============================================================
-       TIMER (Layer 4)
+       TIMER (Layer 5)
        ============================================================ */
     function startTimer() {
       if (state.timerInterval) clearInterval(state.timerInterval);
@@ -1046,12 +1143,12 @@
       document.getElementById('rs-sesi').textContent = state.siswa.sesi;
       document.getElementById('rs-waktu').textContent = new Date().toLocaleString('id-ID');
 
-      showLayer(5);
+      showLayer(6);
       showToast('Jawaban berhasil dikumpulkan!', 'success');
     }
 
     /* ============================================================
-       LAYER 5: KUESIONER
+       LAYER 6: KUESIONER
        ============================================================ */
     function showKuesioner() {
       document.getElementById('result-thanks').classList.add('hidden');
@@ -1218,8 +1315,8 @@
       document.getElementById('cf-mapel').textContent = saved.siswa.mata_pelajaran || '-';
       document.getElementById('cf-proctor').textContent = saved.siswa.proctor_username || '-';
 
-      if (saved.currentLayer === 4 && saved.examStarted) {
-        // Resume exam
+      if (saved.currentLayer === 5 && saved.examStarted) {
+        // Resume exam (Layer 5 = exam)
         state.examStarted = true;
         state.examEndTime = saved.examEndTime;
         state.answers = saved.answers || {};
@@ -1245,7 +1342,7 @@
         document.getElementById('exam-user-info').textContent =
           `${saved.siswa.nama_lengkap} • ${saved.siswa.kelas} • ${saved.siswa.sesi}`;
         startTimer();
-        showLayer(4);
+        showLayer(5);
         if (state.isLocked) document.getElementById('lock-overlay').classList.remove('hidden');
         showToast('Sesi ujian dipulihkan. Silakan lanjutkan.', 'info');
       } else {
