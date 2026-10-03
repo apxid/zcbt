@@ -1309,61 +1309,243 @@
       `).join('');
     }
 
+    /* ============================================================
+       CETAK KARTU UJIAN — Format F4 (Folio 215×330mm), 5 kartu per halaman
+       ============================================================ */
+
+    // Helper: build HTML untuk satu kartu (compact, F4 friendly)
+    function buildKartuHTML(s, sesi, kop) {
+      return `
+        <div class="kartu-item">
+          <div class="kartu-header">
+            <img src="${CONFIG.LOGO}" class="kartu-logo" alt="Logo" />
+            <div class="kartu-title-group">
+              <div class="kartu-title">KARTU PESERTA UJIAN</div>
+              <div class="kartu-subtitle">CBT ${kop.namaSekolah || ''}</div>
+            </div>
+          </div>
+          <div class="kartu-body">
+            <div class="kartu-data">
+              <table class="kartu-table">
+                <tr><td class="lbl">Nama</td><td class="sep">:</td><td class="val">${s.nama_lengkap || '-'}</td></tr>
+                <tr><td class="lbl">Username</td><td class="sep">:</td><td class="val mono">${s.username || '-'}</td></tr>
+                <tr><td class="lbl">Kelas</td><td class="sep">:</td><td class="val">${s.kelas || '-'}</td></tr>
+                <tr><td class="lbl">Ruangan</td><td class="sep">:</td><td class="val">${s.ruangan || '-'}</td></tr>
+                <tr><td class="lbl">Sesi</td><td class="sep">:</td><td class="val">${s.sesi || '-'}</td></tr>
+                <tr><td class="lbl">Mapel</td><td class="sep">:</td><td class="val">${sesi.mata_pelajaran || '-'}</td></tr>
+                <tr><td class="lbl">Tanggal</td><td class="sep">:</td><td class="val">${sesi.tanggal || kop.tanggalUjian || '-'}</td></tr>
+                <tr><td class="lbl">Waktu</td><td class="sep">:</td><td class="val">${sesi.jam_mulai || kop.pukul || ''} - ${sesi.jam_selesai || ''}</td></tr>
+                <tr><td class="lbl">Token</td><td class="sep">:</td><td class="val token">${s.token_ujian || '-'}</td></tr>
+              </table>
+            </div>
+            <div class="kartu-photo">
+              <div class="photo-box">Foto 3×4</div>
+              <div class="ttd-box">
+                <div class="ttd-line"></div>
+                <div class="ttd-label">TTD Panitia</div>
+              </div>
+            </div>
+          </div>
+          <div class="kartu-footer">
+            ${kop.namaSekolah || 'CBT Integrated System'} • NPSN: ${kop.npsn || '-'} • ${kop.kabupaten || ''}, ${kop.provinsi || ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Helper: build CSS untuk cetak F4 (8 kartu per halaman — 2 kolom × 4 baris)
+    function buildKartuCSS() {
+      return `
+        <style>
+          @page {
+            size: 215mm 330mm;  /* F4 / Folio */
+            margin: 8mm;
+          }
+          * { box-sizing: border-box; }
+          body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            color: #000;
+            margin: 0; padding: 0;
+            background: #fff;
+          }
+          /* Grid 2 kolom × 4 baris = 8 kartu per halaman */
+          .kartu-page {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3mm;
+            width: 100%;
+          }
+          .kartu-item {
+            border: 2px solid #1e3a8a;
+            border-radius: 6px;
+            overflow: hidden;
+            height: 75mm;  /* (314mm - 3*3mm) / 4 ≈ 76mm, pakai 75mm untuk safety */
+            display: flex;
+            flex-direction: column;
+            page-break-inside: avoid;
+            break-inside: avoid;
+          }
+          .kartu-header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 2mm 3mm;
+            display: flex;
+            align-items: center;
+            gap: 2mm;
+            flex-shrink: 0;
+          }
+          .kartu-logo {
+            width: 9mm; height: 9mm;
+            background: white;
+            padding: 1mm;
+            border-radius: 2mm;
+            flex-shrink: 0;
+          }
+          .kartu-title-group { flex: 1; }
+          .kartu-title {
+            font-size: 10pt;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            line-height: 1.1;
+          }
+          .kartu-subtitle {
+            font-size: 7.5pt;
+            opacity: 0.9;
+            line-height: 1.1;
+          }
+          .kartu-body {
+            flex: 1;
+            display: flex;
+            padding: 2mm 3mm;
+            gap: 2mm;
+            overflow: hidden;
+          }
+          .kartu-data { flex: 1; min-width: 0; }
+          .kartu-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8.5pt;
+          }
+          .kartu-table td {
+            padding: 0.6mm 0;
+            line-height: 1.15;
+            vertical-align: top;
+          }
+          .kartu-table .lbl { font-weight: 600; width: 18mm; white-space: nowrap; }
+          .kartu-table .sep { width: 2mm; }
+          .kartu-table .val { font-weight: 500; word-break: break-word; }
+          .kartu-table .val.mono { font-family: 'Courier New', monospace; font-size: 8pt; }
+          .kartu-table .val.token {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 9pt;
+            letter-spacing: 0.3px;
+          }
+          .kartu-photo {
+            width: 22mm;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 1mm;
+          }
+          .photo-box {
+            width: 20mm; height: 26mm;
+            border: 1.5px solid #1e3a8a;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 7pt;
+            text-align: center;
+          }
+          .ttd-box { text-align: center; margin-top: 1.5mm; }
+          .ttd-line {
+            width: 20mm;
+            border-top: 1px dashed #475569;
+            margin: 0 auto 0.5mm;
+          }
+          .ttd-label { font-size: 7pt; color: #475569; }
+          .kartu-footer {
+            background: #f1f5f9;
+            padding: 1mm 3mm;
+            font-size: 7pt;
+            color: #64748b;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            flex-shrink: 0;
+          }
+          .page-break { page-break-after: always; break-after: page; }
+          @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          }
+        </style>
+      `;
+    }
+
+    // Mode 1: Cetak 1 siswa → F4 dengan 8 kartu identik (2 kolom × 4 baris)
     async function cetakKartu(username) {
       const res = await apiCall('getKartuUjian', { username });
       if (!res.success) { showToast('Data siswa tidak ditemukan', 'error'); return; }
       const s = res.siswa;
       const sesi = res.sesi || {};
+      const kop = getKopConfig();
+
+      // Generate 8 kartu identik dalam 1 halaman F4 (grid 2×4)
+      const kartuHTML = Array(8).fill(0).map(() => buildKartuHTML(s, sesi, kop)).join('');
+
       const html = `
         <html><head><title>Kartu Ujian - ${s.nama_lengkap}</title>
-        <style>
-          body{font-family:'Inter',sans-serif;padding:40px;color:#000}
-          .kartu{width:600px;margin:0 auto;border:3px solid #1e3a8a;border-radius:12px;overflow:hidden}
-          .header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;padding:20px;text-align:center}
-          .body{padding:25px}
-          table{width:100%}
-          td{padding:6px 4px;border-bottom:1px dotted #cbd5e1;font-size:14px}
-          .photo{width:90px;height:110px;border:2px solid #1e3a8a;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:11px}
-          .footer{background:#f8fafc;padding:12px;text-align:center;font-size:11px;color:#64748b;border-top:1px solid #e2e8f0}
-        </style></head><body>
-          <div class="kartu">
-            <div class="header">
-              <img src="${CONFIG.LOGO}" style="width:50px;height:50px;display:block;margin:0 auto 8px;background:white;padding:4px;border-radius:8px"/>
-              <div style="font-size:18px;font-weight:800">CBT INTEGRATED SYSTEM</div>
-              <div style="font-size:12px;opacity:0.85">Kartu Peserta Ujian</div>
-            </div>
-            <div class="body">
-              <div style="display:flex;gap:20px">
-                <div style="flex:1">
-                  <table>
-                    <tr><td style="font-weight:600">Nama</td><td>: ${s.nama_lengkap}</td></tr>
-                    <tr><td style="font-weight:600">Username</td><td>: ${s.username}</td></tr>
-                    <tr><td style="font-weight:600">Kelas</td><td>: ${s.kelas}</td></tr>
-                    <tr><td style="font-weight:600">Ruangan</td><td>: ${s.ruangan}</td></tr>
-                    <tr><td style="font-weight:600">Sesi</td><td>: ${s.sesi}</td></tr>
-                    <tr><td style="font-weight:600">Mapel</td><td>: ${sesi.mata_pelajaran || '-'}</td></tr>
-                    <tr><td style="font-weight:600">Tanggal</td><td>: ${sesi.tanggal || '-'}</td></tr>
-                    <tr><td style="font-weight:600">Waktu</td><td>: ${sesi.jam_mulai || ''} - ${sesi.jam_selesai || ''}</td></tr>
-                    <tr><td style="font-weight:600">Token</td><td style="font-family:monospace;font-weight:700;color:#1e3a8a">: ${s.token_ujian}</td></tr>
-                  </table>
-                </div>
-                <div class="photo">Foto 3x4</div>
-              </div>
-              <div style="margin-top:20px;text-align:center;font-size:11px;color:#64748b">
-                Tunjukkan kartu ini saat masuk ruangan ujian.<br/>Jangan keluar dari mode fullscreen saat ujian berlangsung.
-              </div>
-            </div>
-            <div class="footer">CBT Integrated System • v1.0 | Developed by MB • yanuar.b@gmail.com</div>
+        ${buildKartuCSS()}</head><body>
+          <div class="kartu-page">
+            ${kartuHTML}
           </div>
         </body></html>`;
+
       const w = window.open('', '_blank');
       w.document.write(html);
       w.document.close();
-      setTimeout(() => w.print(), 500);
+      setTimeout(() => w.print(), 600);
     }
 
-    function printAllKartu() {
-      state.siswa.forEach((s, i) => setTimeout(() => cetakKartu(s.username), i * 800));
+    // Mode 2: Cetak massal → F4 dengan 8 kartu per halaman, paginate otomatis
+    async function printAllKartu() {
+      const kop = getKopConfig();
+      let siswaList = state.siswa;
+      if (!siswaList || siswaList.length === 0) {
+        showToast('Daftar siswa kosong. Pastikan data sudah dimuat.', 'warning');
+        return;
+      }
+
+      const allKartuHTML = [];
+      for (const s of siswaList) {
+        const res = await apiCall('getKartuUjian', { username: s.username });
+        const sesi = (res.success && res.sesi) ? res.sesi : {};
+        allKartuHTML.push(buildKartuHTML(s, sesi, kop));
+      }
+
+      // Paginate: 8 kartu per halaman (grid 2×4)
+      const KARTU_PER_HALAMAN = 8;
+      let pagesHTML = '';
+      for (let i = 0; i < allKartuHTML.length; i += KARTU_PER_HALAMAN) {
+        const chunk = allKartuHTML.slice(i, i + KARTU_PER_HALAMAN);
+        const isLast = (i + KARTU_PER_HALAMAN) >= allKartuHTML.length;
+        pagesHTML += `<div class="kartu-page${isLast ? '' : ' page-break'}">${chunk.join('')}</div>`;
+      }
+
+      const html = `
+        <html><head><title>Cetak Massal Kartu Ujian (${siswaList.length} siswa)</title>
+        ${buildKartuCSS()}</head><body>
+          ${pagesHTML}
+        </body></html>`;
+
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+      setTimeout(() => w.print(), 800);
     }
 
     /* ============================================================
