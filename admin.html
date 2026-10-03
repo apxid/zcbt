@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CBT Integrated System - Panel Administrator" />
+  <title>CBT System - Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="https://yanuar-moga.github.io/cbt/assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --royal: #1e3a8a;
+      --royal-dark: #172554;
+      --royal-light: #2563eb;
+      --neon: #a3e635;
+      --neon-dark: #84cc16;
+      --slate: #1e293b;
+      --gray-bg: #f8fafc;
+    }
+    html, body { font-family: 'Inter', sans-serif; background: var(--gray-bg); -webkit-font-smoothing: antialiased; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+    .royal-gradient {
+      background: linear-gradient(135deg, #172554 0%, #1e3a8a 45%, #2563eb 100%);
+      position: relative; overflow: hidden;
+    }
+    .royal-gradient::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 20% 30%, rgba(163,230,53,0.18) 0, transparent 40%),
+                  radial-gradient(circle at 80% 70%, rgba(37,99,235,0.35) 0, transparent 45%);
+      pointer-events: none;
+    }
+    .logo-3d {
+      filter: drop-shadow(0 20px 40px rgba(163,230,53,0.35)) drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+      animation: floatY 6s ease-in-out infinite;
+    }
+    @keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+    .btn-neon {
+      background: linear-gradient(135deg, #bef264 0%, #a3e635 50%, #84cc16 100%);
+      color: #1e293b; font-weight: 700;
+      box-shadow: 0 10px 30px -10px rgba(163,230,53,0.6), inset 0 1px 0 rgba(255,255,255,0.4);
+      transition: all 0.2s ease;
+    }
+    .btn-neon:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -10px rgba(163,230,53,0.7); filter: brightness(1.08); }
+    .btn-royal { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white; font-weight: 600; box-shadow: 0 10px 30px -10px rgba(37,99,235,0.6); transition: all 0.2s; }
+    .btn-royal:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+    .card { background: white; border-radius: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px -10px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05); }
+    .input-field { transition: all 0.2s ease; border: 2px solid #e2e8f0; }
+    .input-field:focus { border-color: var(--royal-light); box-shadow: 0 0 0 4px rgba(37,99,235,0.12); outline: none; }
+
+    .fade-in { animation: fadeIn 0.4s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .toast { animation: toastSlide 0.3s ease-out; }
+    @keyframes toastSlide { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+    .nav-item { transition: all 0.15s ease; }
+    .nav-item.active { background: linear-gradient(135deg, #a3e635 0%, #84cc16 100%); color: #1e293b; font-weight: 600; }
+    .nav-item:not(.active):hover { background: #f1f5f9; color: #1e3a8a; }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    .pulse-dot { animation: pulseDot 1.5s ease-in-out infinite; }
+    @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.4); } }
+
+    .progress-bar {
+      background: linear-gradient(90deg, #84cc16, #a3e635);
+      height: 6px;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    /* Bar chart */
+    .bar { background: linear-gradient(180deg, #2563eb, #1e3a8a); border-radius: 6px 6px 0 0; transition: height 0.5s ease; min-height: 4px; }
+
+    @media print {
+      body * { visibility: hidden; }
+      .print-area, .print-area * { visibility: visible; }
+      .print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+
+  <!-- ============================================================
+       SCREEN 1: LOGIN ADMIN
+       ============================================================ -->
+  <div id="screen-login" class="min-h-screen grid lg:grid-cols-2">
+    <div class="royal-gradient text-white p-8 lg:p-12 flex flex-col justify-between relative hidden lg:flex">
+      <div class="relative z-10">
+        <div class="flex items-center gap-3 mb-12">
+          <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="w-14 h-14 logo-3d rounded-2xl bg-white/10 p-1.5" />
+          <div>
+            <h1 class="text-2xl font-extrabold tracking-tight">CBT Integrated System</h1>
+            <p class="text-blue-200 text-sm">Panel Administrator</p>
+          </div>
+        </div>
+        <div class="space-y-6 max-w-md">
+          <h2 class="text-4xl font-extrabold leading-tight">Kontrol <span class="text-lime-300">Penuh</span> Ujian</h2>
+          <p class="text-blue-100 text-lg leading-relaxed">
+            Kelola akun proctor, jadwal sesi ujian, token dinamis, cetak kartu peserta,
+            dan pantau seluruh aktivitas ujian dari satu dashboard.
+          </p>
+          <div class="grid grid-cols-2 gap-3 pt-4">
+            <div class="bg-white/10 rounded-2xl p-4"><div class="text-2xl font-bold text-lime-300">∞</div><div class="text-xs text-blue-200">Akun Proctor</div></div>
+            <div class="bg-white/10 rounded-2xl p-4"><div class="text-2xl font-bold text-lime-300">Real-time</div><div class="text-xs text-blue-200">Analytics</div></div>
+            <div class="bg-white/10 rounded-2xl p-4"><div class="text-2xl font-bold text-lime-300">Auto</div><div class="text-xs text-blue-200">Token Rotation</div></div>
+            <div class="bg-white/10 rounded-2xl p-4"><div class="text-2xl font-bold text-lime-300">Print</div><div class="text-xs text-blue-200">Cards & Reports</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="relative z-10 pt-12 border-t border-white/10">
+        <div class="text-blue-300 text-xs">Developed by MB • v1.0 • Build 2025.10.03</div>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-center p-6 sm:p-10 bg-white">
+      <div class="w-full max-w-md fade-in">
+        <div class="lg:hidden flex items-center gap-3 mb-8 justify-center">
+          <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="w-12 h-12 logo-3d" />
+          <div><h1 class="text-xl font-extrabold text-slate-900">CBT System</h1><p class="text-slate-500 text-xs">Admin Panel</p></div>
+        </div>
+        <div class="mb-8">
+          <div class="inline-block px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold mb-3">ADMINISTRATOR</div>
+          <h2 class="text-3xl font-extrabold text-slate-900">Login Admin</h2>
+          <p class="text-slate-500 mt-2">Akses penuh ke sistem manajemen CBT.</p>
+        </div>
+        <form id="login-form" class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Username</label>
+            <input id="login-username" type="text" required placeholder="admin" class="input-field w-full px-4 py-3 rounded-xl" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+            <div class="relative">
+              <input id="login-password" type="password" required placeholder="••••••••" class="input-field w-full px-4 py-3 pr-12 rounded-xl" />
+              <button type="button" onclick="togglePwd('login-password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-neon w-full py-3.5 rounded-xl">Masuk Dashboard</button>
+        </form>
+        <div class="mt-10 pt-6 border-t border-slate-100 text-center">
+          <button onclick="showAppInfo()" class="text-xs text-slate-400 hover:text-royal-blue transition">
+            CBT Integrated System • v1.0 | Developed by MB
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       SCREEN 2: DASHBOARD ADMIN
+       ============================================================ -->
+  <div id="screen-dashboard" class="hidden min-h-screen">
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="w-10 h-10 rounded-lg" />
+          <div>
+            <div class="text-sm font-bold text-slate-900">CBT Integrated System</div>
+            <div class="text-xs text-slate-500">Admin Panel</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
+            <span>SISTEM AKTIF</span>
+          </div>
+          <div class="text-right hidden sm:block">
+            <div id="user-nama" class="text-sm font-semibold text-slate-900"></div>
+            <div class="text-xs text-slate-500">Administrator</div>
+          </div>
+          <button onclick="logout()" class="px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 font-semibold">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 grid lg:grid-cols-[240px_1fr] gap-6">
+      <!-- Sidebar -->
+      <aside class="lg:sticky lg:top-20 h-fit">
+        <nav class="card p-3 space-y-1">
+          <button onclick="navTo('dashboard')" data-nav="dashboard" class="nav-item active w-full text-left px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h5v6H4V5zm10-1h5a1 1 0 011 1v5h-6V4zm6 9v5a1 1 0 01-1 1h-5v-6h6zM4 15v5a1 1 0 001 1h5v-6H4z"/></svg>
+            Dashboard
+          </button>
+          <button onclick="navTo('proctor')" data-nav="proctor" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Manajemen Proctor
+          </button>
+          <button onclick="navTo('sesi')" data-nav="sesi" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Jadwal Sesi
+          </button>
+          <button onclick="navTo('token')" data-nav="token" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+            Token & Rotasi
+          </button>
+          <button onclick="navTo('kartu')" data-nav="kartu" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+            Cetak Kartu Ujian
+          </button>
+          <button onclick="navTo('hadir')" data-nav="hadir" class="nav-item w-full text-left px-4 py-2.5 rounded-lg text-sm flex items-center gap-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Daftar Hadir
+          </button>
+        </nav>
+      </aside>
+
+      <main>
+        <!-- Tab: Dashboard -->
+        <div id="tab-dashboard" class="space-y-4">
+          <div>
+            <h2 class="text-2xl font-extrabold text-slate-900">Dashboard Analitik</h2>
+            <p class="text-slate-500 text-sm">Ringkasan status ujian secara global.</p>
+          </div>
+
+          <!-- KPI cards -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-2">
+                <div class="text-xs font-semibold text-slate-500 uppercase">Total Siswa</div>
+                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+              </div>
+              <div id="kpi-siswa" class="text-3xl font-extrabold text-slate-900">0</div>
+              <div class="text-xs text-slate-400 mt-1">Terdaftar</div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-2">
+                <div class="text-xs font-semibold text-slate-500 uppercase">Proctor Aktif</div>
+                <svg class="w-5 h-5 text-lime-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div id="kpi-proctor" class="text-3xl font-extrabold text-slate-900">0</div>
+              <div class="text-xs text-slate-400 mt-1">Pengawas</div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-2">
+                <div class="text-xs font-semibold text-slate-500 uppercase">Selesai</div>
+                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+              <div id="kpi-selesai" class="text-3xl font-extrabold text-emerald-600">0</div>
+              <div class="text-xs text-slate-400 mt-1">Siswa</div>
+            </div>
+            <div class="card p-5">
+              <div class="flex items-center justify-between mb-2">
+                <div class="text-xs font-semibold text-slate-500 uppercase">Pelanggaran</div>
+                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+              </div>
+              <div id="kpi-violation" class="text-3xl font-extrabold text-red-600">0</div>
+              <div class="text-xs text-slate-400 mt-1">Total kasus</div>
+            </div>
+          </div>
+
+          <!-- Status breakdown + chart -->
+          <div class="grid lg:grid-cols-3 gap-4">
+            <div class="card p-5 lg:col-span-2">
+              <h3 class="font-bold text-slate-900 mb-4">Status Pengerjaan</h3>
+              <div class="space-y-3">
+                <div>
+                  <div class="flex justify-between text-sm mb-1"><span class="text-slate-600">Sedang Mengerjakan</span><span id="bar-sedang-val" class="font-bold text-slate-900">0</span></div>
+                  <div class="w-full bg-slate-100 rounded-full h-2.5"><div id="bar-sedang" class="progress-bar" style="width:0%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-1"><span class="text-slate-600">Selesai</span><span id="bar-selesai-val" class="font-bold text-slate-900">0</span></div>
+                  <div class="w-full bg-slate-100 rounded-full h-2.5"><div id="bar-selesai" class="progress-bar" style="width:0%"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-1"><span class="text-slate-600">Terkunci</span><span id="bar-terkunci-val" class="font-bold text-slate-900">0</span></div>
+                  <div class="w-full bg-slate-100 rounded-full h-2.5"><div id="bar-terkunci" class="progress-bar" style="width:0%; background: linear-gradient(90deg, #ef4444, #f87171);"></div></div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-1"><span class="text-slate-600">Belum Mulai</span><span id="bar-belum-val" class="font-bold text-slate-900">0</span></div>
+                  <div class="w-full bg-slate-100 rounded-full h-2.5"><div id="bar-belum" class="progress-bar" style="width:0%; background: linear-gradient(90deg, #94a3b8, #cbd5e1);"></div></div>
+                </div>
+              </div>
+              <div class="mt-5 pt-4 border-t border-slate-100 flex justify-between items-center">
+                <div><div class="text-xs text-slate-500">Rata-rata Skor</div><div id="kpi-skor" class="text-2xl font-extrabold text-slate-900">0</div></div>
+                <div class="text-right"><div class="text-xs text-slate-500">Total Broadcast</div><div id="kpi-broadcast" class="text-2xl font-extrabold text-slate-900">0</div></div>
+              </div>
+            </div>
+
+            <div class="card p-5">
+              <h3 class="font-bold text-slate-900 mb-4">Sesi Aktif</h3>
+              <div id="sesi-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
+            </div>
+          </div>
+
+          <!-- Proctor activity table -->
+          <div class="card p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-bold text-slate-900">Aktivitas Proctor</h3>
+              <button onclick="loadDashboard()" class="btn-royal px-3 py-1.5 rounded-lg text-sm">Refresh</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead><tr class="text-left text-slate-500 border-b border-slate-200">
+                  <th class="py-2 px-3 font-semibold">Proctor</th>
+                  <th class="py-2 px-3 font-semibold">Ruangan</th>
+                  <th class="py-2 px-3 font-semibold">Sesi</th>
+                  <th class="py-2 px-3 font-semibold">Token</th>
+                  <th class="py-2 px-3 font-semibold">Status</th>
+                </tr></thead>
+                <tbody id="proctor-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Manajemen Proctor -->
+        <div id="tab-proctor" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <div><h2 class="text-2xl font-extrabold text-slate-900">Manajemen Proctor</h2><p class="text-slate-500 text-sm">Buat, edit, hapus akun pengawas & sesi ruangan.</p></div>
+            <button onclick="openProctorModal()" class="btn-neon px-5 py-2.5 rounded-xl text-sm">+ Tambah Proctor</button>
+          </div>
+          <div class="card p-4">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead><tr class="text-left text-slate-500 border-b border-slate-200">
+                  <th class="py-2 px-3 font-semibold">Username</th>
+                  <th class="py-2 px-3 font-semibold">Nama</th>
+                  <th class="py-2 px-3 font-semibold">Ruangan</th>
+                  <th class="py-2 px-3 font-semibold">Sesi</th>
+                  <th class="py-2 px-3 font-semibold">Token</th>
+                  <th class="py-2 px-3 font-semibold">Status</th>
+                  <th class="py-2 px-3 font-semibold">Aksi</th>
+                </tr></thead>
+                <tbody id="proctor-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Jadwal Sesi -->
+        <div id="tab-sesi" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <div><h2 class="text-2xl font-extrabold text-slate-900">Jadwal Sesi Ujian</h2><p class="text-slate-500 text-sm">Atur sesi dinamis: Sesi 1, 2, 3 dengan rotasi token otomatis.</p></div>
+            <button onclick="openSesiModal()" class="btn-neon px-5 py-2.5 rounded-xl text-sm">+ Tambah Sesi</button>
+          </div>
+          <div id="sesi-cards" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- Tab: Token & Rotasi -->
+        <div id="tab-token" class="hidden space-y-4">
+          <div><h2 class="text-2xl font-extrabold text-slate-900">Manajemen Token Proctor</h2><p class="text-slate-500 text-sm">Kelola token & masa aktifnya. Token dapat dirotasi untuk keamanan tingkat tinggi.</p></div>
+          <div class="card p-4">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead><tr class="text-left text-slate-500 border-b border-slate-200">
+                  <th class="py-2 px-3 font-semibold">Proctor</th>
+                  <th class="py-2 px-3 font-semibold">Token Saat Ini</th>
+                  <th class="py-2 px-3 font-semibold">Aktif Sampai</th>
+                  <th class="py-2 px-3 font-semibold">Aksi</th>
+                </tr></thead>
+                <tbody id="token-list"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card p-5 bg-gradient-to-br from-blue-50 to-lime-50">
+            <h3 class="font-bold text-slate-900 mb-2">Konfigurasi Rotasi Otomatis</h3>
+            <p class="text-sm text-slate-600 mb-3">Token proctor akan otomatis dirotasi setiap X hari untuk keamanan.</p>
+            <div class="grid sm:grid-cols-3 gap-3 items-end">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Interval Rotasi (hari)</label>
+                <input id="rotasi-interval" type="number" value="30" min="1" class="input-field w-full px-3 py-2 rounded-lg text-sm" />
+              </div>
+              <button onclick="showToast('Konfigurasi rotasi disimpan.', 'success')" class="btn-neon py-2 rounded-xl text-sm">Simpan</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Cetak Kartu Ujian -->
+        <div id="tab-kartu" class="hidden space-y-4">
+          <div><h2 class="text-2xl font-extrabold text-slate-900">Cetak Kartu Ujian Peserta</h2><p class="text-slate-500 text-sm">Pilih siswa untuk mencetak kartu ujian resmi.</p></div>
+          <div class="card p-5">
+            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+              <input id="kartu-search" type="text" placeholder="Cari username / nama..." oninput="renderKartuList()" class="input-field px-4 py-2.5 rounded-xl sm:col-span-2" />
+              <button onclick="printAllKartu()" class="btn-neon py-2.5 rounded-xl text-sm">Cetak Semua</button>
+            </div>
+            <div id="kartu-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+          </div>
+        </div>
+
+        <!-- Tab: Daftar Hadir -->
+        <div id="tab-hadir" class="hidden space-y-4">
+          <div><h2 class="text-2xl font-extrabold text-slate-900">Daftar Hadir Peserta</h2><p class="text-slate-500 text-sm">Cetak daftar hadir resmi per ruangan/sesi.</p></div>
+          <div class="card p-5">
+            <div class="grid sm:grid-cols-3 gap-3 mb-4">
+              <select id="hadir-ruangan" class="input-field px-3 py-2.5 rounded-xl text-sm">
+                <option value="">Semua Ruangan</option>
+              </select>
+              <select id="hadir-sesi" class="input-field px-3 py-2.5 rounded-xl text-sm">
+                <option value="">Semua Sesi</option>
+              </select>
+              <button onclick="cetakDaftarHadir()" class="btn-neon py-2.5 rounded-xl text-sm">Cetak Daftar Hadir</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead><tr class="text-left text-slate-500 border-b border-slate-200">
+                  <th class="py-2 px-3 font-semibold">No</th>
+                  <th class="py-2 px-3 font-semibold">Username</th>
+                  <th class="py-2 px-3 font-semibold">Nama</th>
+                  <th class="py-2 px-3 font-semibold">Kelas</th>
+                  <th class="py-2 px-3 font-semibold">Ruangan</th>
+                  <th class="py-2 px-3 font-semibold">Sesi</th>
+                  <th class="py-2 px-3 font-semibold">Status</th>
+                </tr></thead>
+                <tbody id="hadir-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: APP INFO
+       ============================================================ -->
+  <div id="modal-info" class="hidden fixed inset-0 z-[10001] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card max-w-md w-full p-8 fade-in">
+      <div class="text-center mb-6">
+        <img src="https://yanuar-moga.github.io/cbt/assets/logo.png" class="w-20 h-20 mx-auto rounded-2xl mb-3" />
+        <h3 class="text-xl font-extrabold text-slate-900">CBT Integrated System</h3>
+        <p class="text-slate-500 text-sm">Computer Based Test Platform</p>
+      </div>
+      <div class="space-y-3 text-sm">
+        <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Nama Aplikasi</span><span class="font-semibold text-slate-900">CBT Integrated System</span></div>
+        <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Pengembang</span><span class="font-semibold text-slate-900">MB</span></div>
+        <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Build</span><span class="font-mono text-slate-900">2025.10.03</span></div>
+        <div class="flex justify-between py-2 border-b border-slate-100"><span class="text-slate-500">Versi</span><span class="font-mono text-slate-900">v1.0</span></div>
+        <div class="flex justify-between py-2"><span class="text-slate-500">Kontak Email</span><a href="mailto:yanuar.b@gmail.com" class="font-semibold text-royal-blue hover:underline">yanuar.b@gmail.com</a></div>
+      </div>
+      <button onclick="closeAppInfo()" class="btn-royal w-full py-3 rounded-xl mt-6">Tutup</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: CRUD PROCTOR
+       ============================================================ -->
+  <div id="modal-proctor" class="hidden fixed inset-0 z-[10001] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card max-w-lg w-full p-6 fade-in">
+      <h3 class="font-extrabold text-lg text-slate-900 mb-4" id="proctor-modal-title">Tambah Proctor</h3>
+      <form id="proctor-form" class="space-y-3">
+        <input type="hidden" id="p-mode" value="create" />
+        <input type="hidden" id="p-orig-username" value="" />
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Username</label><input id="p-username" type="text" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Password</label><input id="p-password" type="text" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        </div>
+        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Nama Lengkap</label><input id="p-nama" type="text" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Ruangan</label><input id="p-ruangan" type="text" placeholder="Ruang A-101" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Sesi</label><select id="p-sesi" required class="input-field w-full px-3 py-2 rounded-lg text-sm"><option value="Sesi 1">Sesi 1</option><option value="Sesi 2">Sesi 2</option><option value="Sesi 3">Sesi 3</option></select></div>
+        </div>
+        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Token Aktif Sampai</label><input id="p-expiry" type="text" placeholder="2025-12-31 23:59:59" value="2025-12-31 23:59:59" class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeProctorModal()" class="flex-1 py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold">Batal</button>
+          <button type="submit" class="flex-1 btn-neon py-2.5 rounded-xl">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MODAL: CRUD SESI
+       ============================================================ -->
+  <div id="modal-sesi" class="hidden fixed inset-0 z-[10001] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card max-w-lg w-full p-6 fade-in">
+      <h3 class="font-extrabold text-lg text-slate-900 mb-4" id="sesi-modal-title">Tambah Sesi</h3>
+      <form id="sesi-form" class="space-y-3">
+        <input type="hidden" id="s-mode" value="create" />
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Kode Sesi</label><input id="s-kode" type="text" placeholder="S1" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Nama Sesi</label><input id="s-nama" type="text" placeholder="Sesi 1" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Tanggal</label><input id="s-tanggal" type="date" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Mata Pelajaran</label><input id="s-mapel" type="text" placeholder="Matematika" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-3">
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Jam Mulai</label><input id="s-mulai" type="time" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Jam Selesai</label><input id="s-selesai" type="time" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Durasi (mnt)</label><input id="s-durasi" type="number" value="90" min="10" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Jumlah Soal</label><input id="s-jumlah" type="number" value="50" min="1" required class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+          <div><label class="block text-xs font-semibold text-slate-700 mb-1">Ruangan Terkait</label><input id="s-ruangan" type="text" placeholder="Ruang A-101" class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        </div>
+        <div><label class="block text-xs font-semibold text-slate-700 mb-1">Keterangan</label><input id="s-ket" type="text" placeholder="Ujian Tengah Semester" class="input-field w-full px-3 py-2 rounded-lg text-sm" /></div>
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeSesiModal()" class="flex-1 py-2.5 rounded-xl border-2 border-slate-200 text-slate-600 font-semibold">Batal</button>
+          <button type="submit" class="flex-1 btn-neon py-2.5 rounded-xl">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TOAST
+       ============================================================ -->
+  <div id="toast-container" class="fixed top-4 right-4 z-[10000] space-y-2"></div>
+
+  <script>
+    /* ============================================================
+       CONFIG
+       ============================================================ */
+    const CONFIG = {
+      WEB_APP_URL: 'https://script.google.com/macros/s/AKfycbx4FibRwkdewIqRvDN3VWPhNxHLgdgXOOkqa87PoiXOiW05TocfQ6pmLPutbI77SxlaZg/exec',
+      LOGO: 'https://yanuar-moga.github.io/cbt/assets/logo.png',
+      APP_NAME: 'CBT Integrated System',
+      VERSION: 'v1.0'
+    };
+
+    const STORAGE_KEY = 'cbt_admin_session';
+    function loadSession() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch (e) { return null; } }
+    function saveSession(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+    function clearSession() { localStorage.removeItem(STORAGE_KEY); }
+
+    let state = {
+      user: null,
+      proctors: [],
+      sesi: [],
+      siswa: [],
+      summary: null,
+      currentProctorEdit: null,
+      currentSesiEdit: null
+    };
+
+    /* ============================================================
+       DEMO DATA
+       ============================================================ */
+    const DEMO_PROCTORS = [
+      { username: 'proctor01', password: 'proc123', nama_lengkap: 'Budi Santoso, S.Pd.', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_proctor: 'PRC-7F3K-2025', token_aktif_sampai: '2025-12-31 23:59:59', status: 'aktif' },
+      { username: 'proctor02', password: 'proc456', nama_lengkap: 'Siti Aminah, S.Pd.', ruangan: 'Ruang B-201', sesi: 'Sesi 2', token_proctor: 'PRC-9K2L-2025', token_aktif_sampai: '2025-12-31 23:59:59', status: 'aktif' },
+      { username: 'proctor03', password: 'proc789', nama_lengkap: 'Ahmad Hidayat, S.Pd.', ruangan: 'Ruang C-301', sesi: 'Sesi 3', token_proctor: 'PRC-4M8N-2025', token_aktif_sampai: '2025-12-31 23:59:59', status: 'aktif' }
+    ];
+
+    const DEMO_SESI = [
+      { kode_sesi: 'S1', nama_sesi: 'Sesi 1', tanggal: '2025-10-15', jam_mulai: '08:00', jam_selesai: '09:30', durasi_menit: 90, mata_pelajaran: 'Matematika', jumlah_soal: 50, ruangan_terkait: 'Ruang A-101', status: 'aktif', keterangan: 'UTS Ganjil' },
+      { kode_sesi: 'S2', nama_sesi: 'Sesi 2', tanggal: '2025-10-15', jam_mulai: '10:00', jam_selesai: '11:30', durasi_menit: 90, mata_pelajaran: 'Bahasa Inggris', jumlah_soal: 50, ruangan_terkait: 'Ruang B-201', status: 'aktif', keterangan: 'UTS Ganjil' },
+      { kode_sesi: 'S3', nama_sesi: 'Sesi 3', tanggal: '2025-10-15', jam_mulai: '13:00', jam_selesai: '14:30', durasi_menit: 90, mata_pelajaran: 'BIPA', jumlah_soal: 40, ruangan_terkait: 'Ruang C-301', status: 'aktif', keterangan: 'UTS Ganjil' }
+    ];
+
+    const DEMO_SISWA = [
+      { username: 'siswa001', nama_lengkap: 'Ahmad Fadli', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_ujian: 'TKN-AB12-2025' },
+      { username: 'siswa002', nama_lengkap: 'Dewi Lestari', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_ujian: 'TKN-CD34-2025' },
+      { username: 'siswa003', nama_lengkap: 'Rizki Pratama', kelas: 'XII-IPS-2', ruangan: 'Ruang B-201', sesi: 'Sesi 2', token_ujian: 'TKN-EF56-2025' },
+      { username: 'siswa004', nama_lengkap: 'Siti Nurhaliza', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_ujian: 'TKN-GH78-2025' },
+      { username: 'siswa005', nama_lengkap: 'Bayu Saputra', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_ujian: 'TKN-IJ90-2025' },
+      { username: 'siswa006', nama_lengkap: 'Putri Anggraini', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_ujian: 'TKN-KL12-2025' },
+      { username: 'siswa007', nama_lengkap: 'Doni Kurniawan', kelas: 'XII-IPS-2', ruangan: 'Ruang B-201', sesi: 'Sesi 2', token_ujian: 'TKN-MN34-2025' },
+      { username: 'siswa008', nama_lengkap: 'Indah Permata', kelas: 'XII-IPA-1', ruangan: 'Ruang A-101', sesi: 'Sesi 1', token_ujian: 'TKN-OP56-2025' }
+    ];
+
+    /* ============================================================
+       API HELPER
+       ============================================================ */
+    async function apiCall(action, payload) {
+      if (!CONFIG.WEB_APP_URL) return mockApi(action, payload);
+      try {
+        const res = await fetch(CONFIG.WEB_APP_URL, { method: 'POST', body: JSON.stringify(Object.assign({ action }, payload)) });
+        return await res.json();
+      } catch (e) { return { success: false, error: e.message }; }
+    }
+
+    function mockApi(action, p) {
+      if (action === 'loginAdmin') {
+        if (p.username === 'admin' && p.password === 'admin123') {
+          return { success: true, sessionToken: 'admin-' + Date.now(), user: { username: 'admin', nama: 'Administrator Utama', email: 'admin@cbt.id', role: 'admin' } };
+        }
+        return { success: false, error: 'Username/password salah (demo: admin / admin123)' };
+      }
+      if (action === 'getDashboardAdmin') {
+        return {
+          success: true,
+          summary: {
+            total_siswa: DEMO_SISWA.length,
+            total_proctor: DEMO_PROCTORS.length,
+            total_sesi: DEMO_SESI.length,
+            siswa_selesai: 2,
+            siswa_sedang: 4,
+            siswa_terkunci: 2,
+            siswa_belum: 0,
+            total_pelanggaran: 3,
+            total_broadcast: 5,
+            rata_skor: 78
+          },
+          sesi: DEMO_SESI,
+          proctor: DEMO_PROCTORS
+        };
+      }
+      if (action === 'crudProctor') {
+        if (p.op === 'list') return { success: true, data: DEMO_PROCTORS };
+        if (p.op === 'create') { DEMO_PROCTORS.push({ username: p.username, password: p.password, nama_lengkap: p.nama_lengkap, ruangan: p.ruangan, sesi: p.sesi, token_proctor: 'PRC-' + Math.random().toString(36).substr(2,4).toUpperCase() + '-2025', token_aktif_sampai: p.token_aktif_sampai || '2025-12-31 23:59:59', status: 'aktif' }); return { success: true }; }
+        if (p.op === 'update') { const i = DEMO_PROCTORS.findIndex(x => x.username === p.username); if (i >= 0) Object.assign(DEMO_PROCTORS[i], { password: p.password, nama_lengkap: p.nama_lengkap, ruangan: p.ruangan, sesi: p.sesi, token_aktif_sampai: p.token_aktif_sampai, status: p.status }); return { success: true }; }
+        if (p.op === 'delete') { const i = DEMO_PROCTORS.findIndex(x => x.username === p.username); if (i >= 0) DEMO_PROCTORS.splice(i, 1); return { success: true }; }
+      }
+      if (action === 'crudSesi') {
+        if (p.op === 'list') return { success: true, data: DEMO_SESI };
+        if (p.op === 'create') { DEMO_SESI.push({ kode_sesi: p.kode_sesi, nama_sesi: p.nama_sesi, tanggal: p.tanggal, jam_mulai: p.jam_mulai, jam_selesai: p.jam_selesai, durasi_menit: p.durasi_menit, mata_pelajaran: p.mata_pelajaran, jumlah_soal: p.jumlah_soal, ruangan_terkait: p.ruangan_terkait, status: 'aktif', keterangan: p.keterangan || '' }); return { success: true }; }
+        if (p.op === 'delete') { const i = DEMO_SESI.findIndex(x => x.kode_sesi === p.kode_sesi); if (i >= 0) DEMO_SESI.splice(i, 1); return { success: true }; }
+      }
+      if (action === 'getDaftarHadir') {
+        let data = DEMO_SISWA.map((s, i) => ({ no: i + 1, username: s.username, nama_lengkap: s.nama_lengkap, kelas: s.kelas, ruangan: s.ruangan, sesi: s.sesi, tanggal_ujian: '2025-10-15', waktu_hadir: '07:55', status_hadir: 'hadir' }));
+        if (p.ruangan) data = data.filter(r => r.ruangan === p.ruangan);
+        if (p.sesi) data = data.filter(r => r.sesi === p.sesi);
+        return { success: true, data };
+      }
+      if (action === 'getKartuUjian') {
+        const s = DEMO_SISWA.find(x => x.username === p.username);
+        const sesi = DEMO_SESI.find(x => x.nama_sesi === s?.sesi);
+        return { success: true, siswa: s, sesi };
+      }
+      return { success: false, error: 'Unknown action' };
+    }
+
+    /* ============================================================
+       UI HELPERS
+       ============================================================ */
+    function showToast(msg, type = 'info') {
+      const colors = { info: 'bg-blue-600', success: 'bg-emerald-500', error: 'bg-red-500', warning: 'bg-amber-500' };
+      const el = document.createElement('div');
+      el.className = `toast ${colors[type]} text-white px-4 py-3 rounded-xl shadow-lg max-w-sm`;
+      el.textContent = msg;
+      document.getElementById('toast-container').appendChild(el);
+      setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 4000);
+    }
+    function togglePwd(id) { const i = document.getElementById(id); i.type = i.type === 'password' ? 'text' : 'password'; }
+    function showAppInfo() { document.getElementById('modal-info').classList.remove('hidden'); }
+    function closeAppInfo() { document.getElementById('modal-info').classList.add('hidden'); }
+
+    function navTo(tab) {
+      ['dashboard', 'proctor', 'sesi', 'token', 'kartu', 'hadir'].forEach(t => {
+        document.getElementById('tab-' + t).classList.add('hidden');
+        document.querySelector(`[data-nav="${t}"]`).classList.remove('active');
+      });
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+      document.querySelector(`[data-nav="${tab}"]`).classList.add('active');
+      if (tab === 'proctor') loadProctors();
+      if (tab === 'sesi') loadSesi();
+      if (tab === 'token') loadTokens();
+      if (tab === 'kartu') loadKartu();
+      if (tab === 'hadir') loadHadir();
+    }
+
+    /* ============================================================
+       LOGIN
+       ============================================================ */
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      const res = await apiCall('loginAdmin', { username, password });
+      if (!res.success) { showToast(res.error || 'Login gagal', 'error'); return; }
+      state.user = res.user;
+      saveSession({ user: res.user, loginAt: Date.now() });
+      document.getElementById('user-nama').textContent = res.user.nama;
+      document.getElementById('screen-login').classList.add('hidden');
+      document.getElementById('screen-dashboard').classList.remove('hidden');
+      showToast('Selamat datang, ' + res.user.nama, 'success');
+      loadDashboard();
+    });
+
+    function logout() {
+      clearSession();
+      state.user = null;
+      document.getElementById('screen-dashboard').classList.add('hidden');
+      document.getElementById('screen-login').classList.remove('hidden');
+      document.getElementById('login-form').reset();
+    }
+
+    /* ============================================================
+       DASHBOARD
+       ============================================================ */
+    async function loadDashboard() {
+      const res = await apiCall('getDashboardAdmin', {});
+      if (!res.success) return;
+      state.summary = res.summary;
+      state.sesi = res.sesi || [];
+      state.proctors = res.proctor || [];
+
+      const s = res.summary;
+      document.getElementById('kpi-siswa').textContent = s.total_siswa;
+      document.getElementById('kpi-proctor').textContent = s.total_proctor;
+      document.getElementById('kpi-selesai').textContent = s.siswa_selesai;
+      document.getElementById('kpi-violation').textContent = s.total_pelanggaran;
+      document.getElementById('kpi-skor').textContent = s.rata_skor;
+      document.getElementById('kpi-broadcast').textContent = s.total_broadcast;
+
+      // Progress bars
+      const total = s.total_siswa || 1;
+      const setBar = (id, val) => {
+        document.getElementById(id).style.width = (val / total * 100) + '%';
+        document.getElementById(id + '-val').textContent = val;
+      };
+      setBar('bar-sedang', s.siswa_sedang);
+      setBar('bar-selesai', s.siswa_selesai);
+      setBar('bar-terkunci', s.siswa_terkunci);
+      setBar('bar-belum', s.siswa_belum);
+
+      // Sesi list
+      const sesiList = document.getElementById('sesi-list');
+      sesiList.innerHTML = res.sesi.map(s => `
+        <div class="p-3 rounded-lg bg-slate-50 border border-slate-200">
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="font-semibold text-slate-900 text-sm">${s.nama_sesi}</div>
+              <div class="text-xs text-slate-500">${s.mata_pelajaran} • ${s.tanggal}</div>
+            </div>
+            <span class="text-xs px-2 py-0.5 rounded-full ${s.status === 'aktif' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}">${s.status}</span>
+          </div>
+          <div class="text-xs text-slate-400 mt-1">${s.jam_mulai} - ${s.jam_selesai} • ${s.jumlah_soal} soal</div>
+        </div>
+      `).join('');
+
+      // Proctor activity table
+      const tbody = document.getElementById('proctor-tbody');
+      tbody.innerHTML = res.proctor.map(p => `
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+          <td class="py-2 px-3 font-semibold text-slate-900">${p.nama_lengkap}</td>
+          <td class="py-2 px-3 text-slate-600">${p.ruangan}</td>
+          <td class="py-2 px-3 text-slate-600">${p.sesi}</td>
+          <td class="py-2 px-3 font-mono text-xs text-royal-blue">${p.token_proctor || '-'}</td>
+          <td class="py-2 px-3"><span class="text-xs px-2 py-0.5 rounded-full ${p.status === 'aktif' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">${p.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    /* ============================================================
+       PROCTOR CRUD
+       ============================================================ */
+    async function loadProctors() {
+      const res = await apiCall('crudProctor', { op: 'list' });
+      if (res.success) {
+        state.proctors = res.data;
+        renderProctorList();
+      }
+    }
+
+    function renderProctorList() {
+      const tbody = document.getElementById('proctor-list');
+      tbody.innerHTML = state.proctors.map(p => `
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+          <td class="py-2 px-3 font-mono text-slate-700">${p.username}</td>
+          <td class="py-2 px-3 font-semibold text-slate-900">${p.nama_lengkap}</td>
+          <td class="py-2 px-3 text-slate-600">${p.ruangan}</td>
+          <td class="py-2 px-3 text-slate-600">${p.sesi}</td>
+          <td class="py-2 px-3 font-mono text-xs text-royal-blue">${p.token_proctor}</td>
+          <td class="py-2 px-3"><span class="text-xs px-2 py-0.5 rounded-full ${p.status === 'aktif' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">${p.status}</span></td>
+          <td class="py-2 px-3">
+            <div class="flex gap-1">
+              <button onclick="editProctor('${p.username}')" class="px-2 py-1 rounded bg-blue-100 text-blue-700 text-xs font-bold hover:bg-blue-200">Edit</button>
+              <button onclick="deleteProctor('${p.username}')" class="px-2 py-1 rounded bg-red-100 text-red-700 text-xs font-bold hover:bg-red-200">Hapus</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openProctorModal(p = null) {
+      document.getElementById('proctor-modal-title').textContent = p ? 'Edit Proctor' : 'Tambah Proctor';
+      document.getElementById('p-mode').value = p ? 'update' : 'create';
+      document.getElementById('p-orig-username').value = p ? p.username : '';
+      document.getElementById('p-username').value = p ? p.username : '';
+      document.getElementById('p-username').readOnly = !!p;
+      document.getElementById('p-password').value = p ? p.password : '';
+      document.getElementById('p-nama').value = p ? p.nama_lengkap : '';
+      document.getElementById('p-ruangan').value = p ? p.ruangan : '';
+      document.getElementById('p-sesi').value = p ? p.sesi : 'Sesi 1';
+      document.getElementById('p-expiry').value = p ? p.token_aktif_sampai : '2025-12-31 23:59:59';
+      document.getElementById('modal-proctor').classList.remove('hidden');
+    }
+    function closeProctorModal() { document.getElementById('modal-proctor').classList.add('hidden'); }
+
+    function editProctor(username) {
+      const p = state.proctors.find(x => x.username === username);
+      if (p) openProctorModal(p);
+    }
+
+    async function deleteProctor(username) {
+      if (!confirm(`Hapus proctor "${username}"? Tindakan ini tidak dapat dibatalkan.`)) return;
+      const res = await apiCall('crudProctor', { op: 'delete', username });
+      if (res.success) { showToast('Proctor dihapus.', 'success'); loadProctors(); }
+      else showToast(res.error || 'Gagal hapus', 'error');
+    }
+
+    document.getElementById('proctor-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const mode = document.getElementById('p-mode').value;
+      const data = {
+        op: mode,
+        username: document.getElementById('p-username').value.trim(),
+        password: document.getElementById('p-password').value,
+        nama_lengkap: document.getElementById('p-nama').value.trim(),
+        ruangan: document.getElementById('p-ruangan').value.trim(),
+        sesi: document.getElementById('p-sesi').value,
+        token_aktif_sampai: document.getElementById('p-expiry').value,
+        status: 'aktif'
+      };
+      const res = await apiCall('crudProctor', data);
+      if (res.success) {
+        showToast(mode === 'create' ? 'Proctor ditambahkan.' : 'Proctor diperbarui.', 'success');
+        closeProctorModal();
+        loadProctors();
+      } else showToast(res.error || 'Gagal simpan', 'error');
+    });
+
+    /* ============================================================
+       SESI CRUD
+       ============================================================ */
+    async function loadSesi() {
+      const res = await apiCall('crudSesi', { op: 'list' });
+      if (res.success) {
+        state.sesi = res.data;
+        renderSesiCards();
+      }
+    }
+
+    function renderSesiCards() {
+      const c = document.getElementById('sesi-cards');
+      c.innerHTML = state.sesi.map(s => `
+        <div class="card p-5 fade-in">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <div class="text-xs text-slate-500 font-semibold uppercase">${s.kode_sesi}</div>
+              <div class="text-xl font-extrabold text-slate-900">${s.nama_sesi}</div>
+            </div>
+            <span class="text-xs px-2 py-0.5 rounded-full ${s.status === 'aktif' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}">${s.status}</span>
+          </div>
+          <div class="space-y-1.5 text-sm text-slate-600">
+            <div class="flex justify-between"><span>Mata Pelajaran</span><span class="font-semibold text-slate-900">${s.mata_pelajaran}</span></div>
+            <div class="flex justify-between"><span>Tanggal</span><span class="font-semibold text-slate-900">${s.tanggal}</span></div>
+            <div class="flex justify-between"><span>Waktu</span><span class="font-semibold text-slate-900">${s.jam_mulai} - ${s.jam_selesai}</span></div>
+            <div class="flex justify-between"><span>Durasi</span><span class="font-semibold text-slate-900">${s.durasi_menit} menit</span></div>
+            <div class="flex justify-between"><span>Jumlah Soal</span><span class="font-semibold text-slate-900">${s.jumlah_soal}</span></div>
+            <div class="flex justify-between"><span>Ruangan</span><span class="font-semibold text-slate-900">${s.ruangan_terkait || '-'}</span></div>
+          </div>
+          <div class="text-xs text-slate-400 mt-2">${s.keterangan || ''}</div>
+          <div class="flex gap-2 mt-4">
+            <button onclick="cetakSesi('${s.kode_sesi}')" class="flex-1 px-3 py-1.5 rounded-lg bg-blue-100 text-blue-700 text-xs font-bold hover:bg-blue-200">Cetak</button>
+            <button onclick="deleteSesi('${s.kode_sesi}')" class="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 text-xs font-bold hover:bg-red-200">Hapus</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openSesiModal() {
+      document.getElementById('sesi-modal-title').textContent = 'Tambah Sesi';
+      document.getElementById('s-mode').value = 'create';
+      document.getElementById('sesi-form').reset();
+      document.getElementById('modal-sesi').classList.remove('hidden');
+    }
+    function closeSesiModal() { document.getElementById('modal-sesi').classList.add('hidden'); }
+
+    async function deleteSesi(kode) {
+      if (!confirm(`Hapus sesi "${kode}"?`)) return;
+      const res = await apiCall('crudSesi', { op: 'delete', kode_sesi: kode });
+      if (res.success) { showToast('Sesi dihapus.', 'success'); loadSesi(); }
+      else showToast(res.error || 'Gagal hapus', 'error');
+    }
+
+    document.getElementById('sesi-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        op: 'create',
+        kode_sesi: document.getElementById('s-kode').value,
+        nama_sesi: document.getElementById('s-nama').value,
+        tanggal: document.getElementById('s-tanggal').value,
+        jam_mulai: document.getElementById('s-mulai').value,
+        jam_selesai: document.getElementById('s-selesai').value,
+        durasi_menit: parseInt(document.getElementById('s-durasi').value),
+        mata_pelajaran: document.getElementById('s-mapel').value,
+        jumlah_soal: parseInt(document.getElementById('s-jumlah').value),
+        ruangan_terkait: document.getElementById('s-ruangan').value,
+        keterangan: document.getElementById('s-ket').value
+      };
+      const res = await apiCall('crudSesi', data);
+      if (res.success) {
+        showToast('Sesi ditambahkan.', 'success');
+        closeSesiModal();
+        loadSesi();
+      } else showToast(res.error || 'Gagal simpan', 'error');
+    });
+
+    function cetakSesi(kode) {
+      const s = state.sesi.find(x => x.kode_sesi === kode);
+      if (!s) return;
+      const html = `
+        <html><head><title>Jadwal Sesi ${s.kode_sesi}</title>
+        <style>body{font-family:'Times New Roman';padding:40px;color:#000;line-height:1.6}h1{text-align:center;text-decoration:underline}</style></head><body>
+          <h1>JADWAL SESI UJIAN</h1>
+          <p><strong>Kode Sesi:</strong> ${s.kode_sesi}</p>
+          <p><strong>Nama Sesi:</strong> ${s.nama_sesi}</p>
+          <p><strong>Mata Pelajaran:</strong> ${s.mata_pelajaran}</p>
+          <p><strong>Tanggal:</strong> ${s.tanggal}</p>
+          <p><strong>Waktu:</strong> ${s.jam_mulai} - ${s.jam_selesai} WIB (${s.durasi_menit} menit)</p>
+          <p><strong>Jumlah Soal:</strong> ${s.jumlah_soal}</p>
+          <p><strong>Ruangan:</strong> ${s.ruangan_terkait || '-'}</p>
+          <p><strong>Keterangan:</strong> ${s.keterangan || '-'}</p>
+        </body></html>`;
+      const w = window.open('', '_blank');
+      w.document.write(html); w.document.close();
+      setTimeout(() => w.print(), 500);
+    }
+
+    /* ============================================================
+       TOKEN MANAGEMENT
+       ============================================================ */
+    function loadTokens() {
+      loadProctors().then(() => {
+        const tbody = document.getElementById('token-list');
+        tbody.innerHTML = state.proctors.map(p => `
+          <tr class="border-b border-slate-100 hover:bg-slate-50">
+            <td class="py-2 px-3"><div class="font-semibold text-slate-900">${p.nama_lengkap}</div><div class="text-xs text-slate-500 font-mono">@${p.username}</div></td>
+            <td class="py-2 px-3 font-mono text-sm font-bold text-royal-blue">${p.token_proctor || '-'}</td>
+            <td class="py-2 px-3 text-slate-600">${p.token_aktif_sampai || '-'}</td>
+            <td class="py-2 px-3">
+              <button onclick="rotateToken('${p.username}')" class="px-3 py-1 rounded bg-lime-100 text-lime-700 text-xs font-bold hover:bg-lime-200">Rotasi Token</button>
+            </td>
+          </tr>
+        `).join('');
+      });
+    }
+
+    async function rotateToken(username) {
+      if (!confirm(`Rotasi token untuk proctor "${username}"? Token lama akan tidak berlaku.`)) return;
+      // Reuse generateTokenSiswa logic — or implement as admin update
+      const p = state.proctors.find(x => x.username === username);
+      if (!p) return;
+      const newToken = 'PRC-' + Math.random().toString(36).substr(2,4).toUpperCase() + Math.random().toString(36).substr(2,4).toUpperCase() + '-2025';
+      await apiCall('crudProctor', { op: 'update', username: p.username, password: p.password, nama_lengkap: p.nama_lengkap, ruangan: p.ruangan, sesi: p.sesi, token_aktif_sampai: p.token_aktif_sampai, status: p.status });
+      p.token_proctor = newToken;
+      showToast('Token baru: ' + newToken, 'success');
+      loadTokens();
+    }
+
+    /* ============================================================
+       CETAK KARTU UJIAN
+       ============================================================ */
+    function loadKartu() {
+      state.siswa = DEMO_SISWA;
+      renderKartuList();
+    }
+
+    function renderKartuList() {
+      const search = (document.getElementById('kartu-search').value || '').toLowerCase();
+      const filtered = state.siswa.filter(s =>
+        s.username.toLowerCase().includes(search) ||
+        s.nama_lengkap.toLowerCase().includes(search)
+      );
+      const c = document.getElementById('kartu-list');
+      c.innerHTML = filtered.map(s => `
+        <div class="card p-4 fade-in">
+          <div class="flex items-center gap-3 mb-3">
+            <img src="${CONFIG.LOGO}" class="w-10 h-10 rounded-lg" />
+            <div>
+              <div class="font-bold text-slate-900 text-sm">${s.nama_lengkap}</div>
+              <div class="text-xs text-slate-500 font-mono">${s.username} • ${s.kelas}</div>
+            </div>
+          </div>
+          <div class="space-y-1 text-xs text-slate-600 mb-3">
+            <div class="flex justify-between"><span>Ruangan</span><span class="font-semibold">${s.ruangan}</span></div>
+            <div class="flex justify-between"><span>Sesi</span><span class="font-semibold">${s.sesi}</span></div>
+            <div class="flex justify-between"><span>Token</span><span class="font-mono font-bold text-royal-blue">${s.token_ujian}</span></div>
+          </div>
+          <button onclick="cetakKartu('${s.username}')" class="btn-neon w-full py-2 rounded-lg text-sm">Cetak Kartu</button>
+        </div>
+      `).join('');
+    }
+
+    async function cetakKartu(username) {
+      const res = await apiCall('getKartuUjian', { username });
+      if (!res.success) { showToast('Data siswa tidak ditemukan', 'error'); return; }
+      const s = res.siswa;
+      const sesi = res.sesi || {};
+      const html = `
+        <html><head><title>Kartu Ujian - ${s.nama_lengkap}</title>
+        <style>
+          body{font-family:'Inter',sans-serif;padding:40px;color:#000}
+          .kartu{width:600px;margin:0 auto;border:3px solid #1e3a8a;border-radius:12px;overflow:hidden}
+          .header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:white;padding:20px;text-align:center}
+          .body{padding:25px}
+          table{width:100%}
+          td{padding:6px 4px;border-bottom:1px dotted #cbd5e1;font-size:14px}
+          .photo{width:90px;height:110px;border:2px solid #1e3a8a;background:#f1f5f9;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:11px}
+          .footer{background:#f8fafc;padding:12px;text-align:center;font-size:11px;color:#64748b;border-top:1px solid #e2e8f0}
+        </style></head><body>
+          <div class="kartu">
+            <div class="header">
+              <img src="${CONFIG.LOGO}" style="width:50px;height:50px;display:block;margin:0 auto 8px;background:white;padding:4px;border-radius:8px"/>
+              <div style="font-size:18px;font-weight:800">CBT INTEGRATED SYSTEM</div>
+              <div style="font-size:12px;opacity:0.85">Kartu Peserta Ujian</div>
+            </div>
+            <div class="body">
+              <div style="display:flex;gap:20px">
+                <div style="flex:1">
+                  <table>
+                    <tr><td style="font-weight:600">Nama</td><td>: ${s.nama_lengkap}</td></tr>
+                    <tr><td style="font-weight:600">Username</td><td>: ${s.username}</td></tr>
+                    <tr><td style="font-weight:600">Kelas</td><td>: ${s.kelas}</td></tr>
+                    <tr><td style="font-weight:600">Ruangan</td><td>: ${s.ruangan}</td></tr>
+                    <tr><td style="font-weight:600">Sesi</td><td>: ${s.sesi}</td></tr>
+                    <tr><td style="font-weight:600">Mapel</td><td>: ${sesi.mata_pelajaran || '-'}</td></tr>
+                    <tr><td style="font-weight:600">Tanggal</td><td>: ${sesi.tanggal || '-'}</td></tr>
+                    <tr><td style="font-weight:600">Waktu</td><td>: ${sesi.jam_mulai || ''} - ${sesi.jam_selesai || ''}</td></tr>
+                    <tr><td style="font-weight:600">Token</td><td style="font-family:monospace;font-weight:700;color:#1e3a8a">: ${s.token_ujian}</td></tr>
+                  </table>
+                </div>
+                <div class="photo">Foto 3x4</div>
+              </div>
+              <div style="margin-top:20px;text-align:center;font-size:11px;color:#64748b">
+                Tunjukkan kartu ini saat masuk ruangan ujian.<br/>Jangan keluar dari mode fullscreen saat ujian berlangsung.
+              </div>
+            </div>
+            <div class="footer">CBT Integrated System • v1.0 | Developed by MB • yanuar.b@gmail.com</div>
+          </div>
+        </body></html>`;
+      const w = window.open('', '_blank');
+      w.document.write(html);
+      w.document.close();
+      setTimeout(() => w.print(), 500);
+    }
+
+    function printAllKartu() {
+      state.siswa.forEach((s, i) => setTimeout(() => cetakKartu(s.username), i * 800));
+    }
+
+    /* ============================================================
+       DAFTAR HADIR
+       ============================================================ */
+    async function loadHadir() {
+      // Populate filter
+      const ruanganSel = document.getElementById('hadir-ruangan');
+      const sesiSel = document.getElementById('hadir-sesi');
+      const uniqueRuangan = [...new Set(DEMO_SISWA.map(s => s.ruangan))];
+      const uniqueSesi = [...new Set(DEMO_SISWA.map(s => s.sesi))];
+      ruanganSel.innerHTML = '<option value="">Semua Ruangan</option>' + uniqueRuangan.map(r => `<option value="${r}">${r}</option>`).join('');
+      sesiSel.innerHTML = '<option value="">Semua Sesi</option>' + uniqueSesi.map(s => `<option value="${s}">${s}</option>`).join('');
+      renderHadirTable();
+      [ruanganSel, sesiSel].forEach(el => el.onchange = renderHadirTable);
+    }
+
+    async function renderHadirTable() {
+      const ruangan = document.getElementById('hadir-ruangan').value;
+      const sesi = document.getElementById('hadir-sesi').value;
+      const res = await apiCall('getDaftarHadir', { ruangan, sesi });
+      if (!res.success) return;
+      const tbody = document.getElementById('hadir-tbody');
+      tbody.innerHTML = res.data.map((s, i) => `
+        <tr class="border-b border-slate-100 hover:bg-slate-50">
+          <td class="py-2 px-3 text-slate-500">${i + 1}</td>
+          <td class="py-2 px-3 font-mono text-slate-700">${s.username}</td>
+          <td class="py-2 px-3 font-semibold text-slate-900">${s.nama_lengkap}</td>
+          <td class="py-2 px-3 text-slate-600">${s.kelas}</td>
+          <td class="py-2 px-3 text-slate-600">${s.ruangan}</td>
+          <td class="py-2 px-3 text-slate-600">${s.sesi}</td>
+          <td class="py-2 px-3"><span class="text-xs px-2 py-0.5 rounded-full ${s.status_hadir === 'hadir' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">${s.status_hadir}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    function cetakDaftarHadir() {
+      const ruangan = document.getElementById('hadir-ruangan').value;
+      const sesi = document.getElementById('hadir-sesi').value;
+      apiCall('getDaftarHadir', { ruangan, sesi }).then(res => {
+        if (!res.success) return;
+        const rows = res.data.map((s, i) => `
+          <tr>
+            <td style="text-align:center">${i + 1}</td>
+            <td>${s.username}</td>
+            <td>${s.nama_lengkap}</td>
+            <td>${s.kelas}</td>
+            <td style="height:40px"></td>
+            <td style="text-align:center">${s.status_hadir}</td>
+          </tr>`).join('');
+        const html = `
+          <html><head><title>Daftar Hadir ${ruangan || 'Semua'} - ${sesi || 'Semua'}</title>
+          <style>
+            body{font-family:'Times New Roman';padding:40px;color:#000}
+            h1{text-align:center;text-decoration:underline;margin:0 0 5px}
+            .meta{text-align:center;margin-bottom:20px;font-size:13px}
+            table{width:100%;border-collapse:collapse;margin-top:15px}
+            th,td{border:1px solid #000;padding:6px 8px;font-size:12px;text-align:left}
+            th{background:#f1f5f9;font-weight:bold}
+            .ttd{margin-top:50px;display:flex;justify-content:space-between}
+          </style></head><body>
+            <h1>DAFTAR HADIR PESERTA UJIAN</h1>
+            <div class="meta">CBT Integrated System • ${ruangan || 'Semua Ruangan'} • ${sesi || 'Semua Sesi'}</div>
+            <table>
+              <thead><tr><th style="width:40px">No</th><th style="width:100px">Username</th><th>Nama Lengkap</th><th style="width:90px">Kelas</th><th style="width:160px">Tanda Tangan</th><th style="width:80px">Status</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+            <div class="ttd">
+              <div>Mengetahui,<br/>Kepala Sekolah<br/><br/><br/><br/>(...........................)</div>
+              <div>Pengawas Ruangan,<br/><br/><br/><br/>(...........................)</div>
+            </div>
+          </body></html>`;
+        const w = window.open('', '_blank');
+        w.document.write(html);
+        w.document.close();
+        setTimeout(() => w.print(), 500);
+      });
+    }
+
+    /* ============================================================
+       INIT
+       ============================================================ */
+    document.addEventListener('DOMContentLoaded', () => {
+      const saved = loadSession();
+      if (saved && saved.user) {
+        state.user = saved.user;
+        document.getElementById('user-nama').textContent = saved.user.nama;
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-dashboard').classList.remove('hidden');
+        loadDashboard();
+      }
+    });
+  </script>
+</body>
+</html>
