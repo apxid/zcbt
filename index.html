@@ -108,11 +108,24 @@
     .input-field {
       transition: all 0.2s ease;
       border: 2px solid #e2e8f0;
+      color: #1e293b;            /* PENTING: text gelap, tidak ikut white dari parent */
+      background: #ffffff;
     }
     .input-field:focus {
       border-color: var(--royal-light);
       box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
       outline: none;
+    }
+    .input-field::placeholder { color: #94a3b8; }
+
+    /* Star rating card */
+    .rating-card {
+      background: #ffffff;
+      color: #1e293b;
+    }
+    .rating-card.active {
+      background: #fef3c7 !important;
+      border-color: #f59e0b !important;
     }
 
     /* Layer transition */
@@ -503,6 +516,18 @@
             </div>
             <button onclick="finishExam()" class="btn-neon w-full py-2.5 rounded-xl text-sm mt-5">Kumpulkan Jawaban</button>
           </div>
+
+          <!-- Broadcast messages panel -->
+          <div class="card p-5 mt-4">
+            <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4 text-royal-blue" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 13h12a1 1 0 00.707-1.707L16 11V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
+              Pesan Pengawas
+              <span id="bc-badge" class="hidden ml-1 px-2 py-0.5 rounded-full bg-red-500 text-white text-xs font-bold">0</span>
+            </h3>
+            <div id="broadcast-list" class="space-y-2 max-h-48 overflow-y-auto text-sm">
+              <p class="text-slate-400 text-xs">Belum ada pesan.</p>
+            </div>
+          </div>
         </aside>
       </div>
     </main>
@@ -685,6 +710,28 @@
   <!-- ============================================================
        APP INFO MODAL (footer popup)
        ============================================================ -->
+  <!-- ============================================================
+       BROADCAST POPUP NOTIFICATION (dari proctor)
+       ============================================================ -->
+  <div id="modal-broadcast" class="hidden fixed inset-0 z-[10001] bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card max-w-md w-full p-6 fade-in border-t-4 border-t-royal-blue">
+      <div class="flex items-start gap-3">
+        <div class="inline-flex w-12 h-12 items-center justify-center rounded-full bg-blue-100 flex-shrink-0">
+          <svg class="w-6 h-6 text-royal-blue" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 13h12a1 1 0 00.707-1.707L16 11V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
+        </div>
+        <div class="flex-1">
+          <div class="text-xs font-semibold text-royal-blue uppercase tracking-wide" id="bc-tipe">PENGUMUMAN</div>
+          <div class="text-sm text-slate-700 mt-1" id="bc-pesan"></div>
+          <div class="text-xs text-slate-400 mt-2" id="bc-time"></div>
+        </div>
+      </div>
+      <button onclick="closeBroadcast()" class="btn-royal w-full py-2.5 rounded-xl mt-4 text-sm">Tutup</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       APP INFO MODAL (footer popup)
+       ============================================================ -->
   <div id="modal-info" class="hidden fixed inset-0 z-[10001] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="card max-w-md w-full p-8 fade-in">
       <div class="text-center mb-6">
@@ -743,7 +790,10 @@
       isLocked: false,
       timerInterval: null,
       antiCheatActive: false,
-      surveyRatings: { kemudahan_aplikasi: 0, kemudahan_soal: 0 }
+      surveyRatings: { kemudahan_aplikasi: 0, kemudahan_soal: 0 },
+      lastBroadcastCheck: null,
+      broadcastInterval: null,
+      broadcastCount: 0
     };
 
     /* ============================================================
@@ -806,8 +856,15 @@
         DEMO_QUESTIONS.forEach(q => { if (p.jawaban[q.id_soal]) benar++; });
         return { success: true, skor: Math.round((benar / DEMO_QUESTIONS.length) * 100), benar, salah: 0, kosong: DEMO_QUESTIONS.length - benar };
       }
-      if (action === 'kirimKuesioner') return { success: true };
+      if (action === 'kirimKuesioner') { console.log('[DEMO] Kuesioner diterima:', p); return { success: true }; }
       if (action === 'laporPelanggaran') return { success: true };
+      if (action === 'getBroadcastForSiswa') {
+        // Demo: return pesan contoh tiap 30 detik
+        const now = Date.now();
+        if (!state.lastBroadcastCheck) state.lastBroadcastCheck = now;
+        // Untuk demo, return array kosong (tidak ada pesan baru)
+        return { success: true, pesan: [] };
+      }
       return { success: false, error: 'Unknown action' };
     }
 
@@ -1032,6 +1089,7 @@
         `${state.siswa.nama_lengkap} • ${state.siswa.kelas} • ${state.siswa.sesi}`;
 
       startTimer();
+      startBroadcastPolling();  // Mulai polling pesan broadcast dari proctor
       showLayer(5);
       showToast('Ujian dimulai. Semoga sukses!', 'success');
     }
@@ -1118,6 +1176,78 @@
     }
 
     /* ============================================================
+       BROADCAST POLLING (real-time dari proctor)
+       ============================================================ */
+    function startBroadcastPolling() {
+      state.lastBroadcastCheck = new Date().toISOString();
+      if (state.broadcastInterval) clearInterval(state.broadcastInterval);
+      // Cek pesan baru setiap 8 detik
+      state.broadcastInterval = setInterval(checkBroadcast, 8000);
+      checkBroadcast(); // cek langsung pertama kali
+    }
+
+    async function checkBroadcast() {
+      if (!state.user || !state.siswa || state.isLocked) return;
+      // Hanya polling saat di Layer 5 (exam)
+      if (state.currentLayer !== 5) return;
+      try {
+        const res = await apiCall('getBroadcastForSiswa', {
+          username: state.siswa.username,
+          ruangan: state.siswa.ruangan,
+          since: state.lastBroadcastCheck
+        });
+        if (!res.success || !res.pesan || !res.pesan.length) return;
+        state.lastBroadcastCheck = new Date().toISOString();
+        res.pesan.forEach(p => {
+          showBroadcastPopup(p);
+          addToBroadcastList(p);
+          state.broadcastCount++;
+        });
+        updateBroadcastBadge();
+      } catch (e) {
+        console.warn('Broadcast check error:', e);
+      }
+    }
+
+    function showBroadcastPopup(p) {
+      document.getElementById('bc-tipe').textContent = (p.tipe_broadcast || 'pengumuman').toUpperCase();
+      document.getElementById('bc-pesan').textContent = p.isi_pesan;
+      const timeStr = p.timestamp ? new Date(p.timestamp).toLocaleString('id-ID') : '';
+      document.getElementById('bc-time').textContent = 'Dari: ' + (p.proctor_username || 'Proctor') + ' • ' + timeStr;
+      document.getElementById('modal-broadcast').classList.remove('hidden');
+    }
+
+    function closeBroadcast() {
+      document.getElementById('modal-broadcast').classList.add('hidden');
+    }
+
+    function addToBroadcastList(p) {
+      const list = document.getElementById('broadcast-list');
+      if (list.querySelector('p.text-slate-400')) list.innerHTML = '';
+      const div = document.createElement('div');
+      const tipeColor = {
+        'pengumuman': 'bg-blue-50 border-royal-blue text-royal-blue',
+        'peringatan': 'bg-red-50 border-red-500 text-red-700',
+        'info_waktu': 'bg-amber-50 border-amber-500 text-amber-700'
+      };
+      const colorCls = tipeColor[p.tipe_broadcast] || tipeColor.pengumuman;
+      div.className = 'p-2.5 rounded-lg border-l-2 ' + colorCls;
+      const timeStr = p.timestamp ? new Date(p.timestamp).toLocaleTimeString('id-ID') : '';
+      div.innerHTML = `<div class="text-xs font-semibold uppercase">${p.tipe_broadcast || 'pengumuman'} • ${timeStr}</div><div class="text-slate-700 text-sm mt-0.5">${p.isi_pesan}</div>`;
+      list.prepend(div);
+    }
+
+    function updateBroadcastBadge() {
+      const badge = document.getElementById('bc-badge');
+      if (state.broadcastCount > 0) {
+        badge.textContent = state.broadcastCount;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    /* ============================================================
        FINISH EXAM (Layer 4 → 5)
        ============================================================ */
     async function finishExam(autoSubmit = false) {
@@ -1125,6 +1255,7 @@
         if (!confirm('Anda yakin ingin mengumpulkan jawaban? Tindakan ini tidak dapat dibatalkan.')) return;
       }
       if (state.timerInterval) clearInterval(state.timerInterval);
+      if (state.broadcastInterval) clearInterval(state.broadcastInterval);
       // Stop anti-cheat
       setAntiCheat(false);
 
@@ -1182,7 +1313,9 @@
         sesi: state.siswa.sesi,
         kemudahan_aplikasi: state.surveyRatings.kemudahan_aplikasi,
         kemudahan_soal: state.surveyRatings.kemudahan_soal,
-        saran: document.getElementById('survey-saran').value
+        kejelasan_soal: state.surveyRatings.kemudahan_aplikasi,  // pakai rating yg sama sbg proxy
+        kepuasan_umum: state.surveyRatings.kemudahan_aplikasi,    // pakai rating yg sama sbg proxy
+        kritik_saran: document.getElementById('survey-saran').value
       });
       showToast('Terima kasih atas kuesioner Anda!', 'success');
       showFinalThanks();
@@ -1207,6 +1340,9 @@
         if (document.exitFullscreen) await document.exitFullscreen();
         else if (document.webkitExitFullscreen) await document.webkitExitFullscreen();
       }
+      // Clear timers & intervals
+      if (state.timerInterval) clearInterval(state.timerInterval);
+      if (state.broadcastInterval) clearInterval(state.broadcastInterval);
       // Clear state
       state.user = null;
       state.siswa = null;
@@ -1217,11 +1353,17 @@
       state.answers = {};
       state.isLocked = false;
       state.surveyRatings = { kemudahan_aplikasi: 0, kemudahan_soal: 0 };
+      state.lastBroadcastCheck = null;
+      state.broadcastCount = 0;
       clearSession();
-      // Reset form
+      // Reset form & UI
       document.getElementById('login-form').reset();
       document.getElementById('exam-token').value = '';
       document.getElementById('survey-saran').value = '';
+      const badge = document.getElementById('bc-badge');
+      if (badge) badge.classList.add('hidden');
+      const bcList = document.getElementById('broadcast-list');
+      if (bcList) bcList.innerHTML = '<p class="text-slate-400 text-xs">Belum ada pesan.</p>';
       showLayer(2);
     }
 
@@ -1342,6 +1484,7 @@
         document.getElementById('exam-user-info').textContent =
           `${saved.siswa.nama_lengkap} • ${saved.siswa.kelas} • ${saved.siswa.sesi}`;
         startTimer();
+        startBroadcastPolling();  // Restart polling saat resume
         showLayer(5);
         if (state.isLocked) document.getElementById('lock-overlay').classList.remove('hidden');
         showToast('Sesi ujian dipulihkan. Silakan lanjutkan.', 'info');
